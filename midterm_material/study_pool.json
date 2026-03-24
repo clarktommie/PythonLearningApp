@@ -1,0 +1,477 @@
+[
+  {
+    "term": "STAT",
+    "def": "Applied Multivariate Analysis",
+    "formula": null
+  },
+  {
+    "term": "Multivariate Data",
+    "def": "When studying complex phenomenon, we",
+    "formula": null
+  },
+  {
+    "term": "Multivariate techniques",
+    "def": "methods to elicit information from",
+    "formula": null
+  },
+  {
+    "term": "Sorting and grouping",
+    "def": "create groups of “similar” objects or",
+    "formula": null
+  },
+  {
+    "term": "Data",
+    "def": "measurements on p variables (attributes,",
+    "formula": null
+  },
+  {
+    "term": "consider",
+    "def": "the covariance between two variables j and k.",
+    "formula": null
+  },
+  {
+    "term": "Correlation",
+    "def": "This suggests an alternative measure of association.",
+    "formula": null
+  },
+  {
+    "term": "Covariances are symmetric",
+    "def": "sik = ski .",
+    "formula": null
+  },
+  {
+    "term": "and",
+    "def": "simply equal to the square of the correlation. For example,",
+    "formula": null
+  },
+  {
+    "term": "Univariate case",
+    "def": "Histograms",
+    "formula": null
+  },
+  {
+    "term": "If outliers",
+    "def": "detected, then you should consult with a statistician.",
+    "formula": null
+  },
+  {
+    "term": "Vectors",
+    "def": "An array x of n real numbers is called a vector & written",
+    "formula": null
+  },
+  {
+    "term": "Two vectors",
+    "def": "equal (identical) if they both have the same length",
+    "formula": null
+  },
+  {
+    "term": "Statistical Distance",
+    "def": "Weight scores by a variable’s standard",
+    "formula": null
+  },
+  {
+    "term": "If and",
+    "def": "n × 1 vector, i.e.,",
+    "formula": null
+  },
+  {
+    "term": "Scalar Multiplication",
+    "def": "multiply each element of A by the",
+    "formula": null
+  },
+  {
+    "term": "Matrix addition is associative",
+    "def": "(A + B) + C = A + (B + C)",
+    "formula": null
+  },
+  {
+    "term": "Example",
+    "def": "Determinant of a (3 × 3) matrix",
+    "formula": null
+  },
+  {
+    "term": "Defintion",
+    "def": "The inverse of a square matrix A is the matrix A−1",
+    "formula": null
+  },
+  {
+    "term": "quadratic form",
+    "def": "defined by",
+    "formula": null
+  },
+  {
+    "term": "covariance matrices",
+    "def": "based, are linearly independent.",
+    "formula": null
+  },
+  {
+    "term": "ej",
+    "def": "e′i ej = 0. The eigenvectors are unique unless two or more",
+    "formula": "e′i ej = 0. The eigenvectors are unique unless two or more"
+  },
+  {
+    "term": "transformations that is let",
+    "def": "transformations; that is, let y = Ax; then",
+    "formula": "transformations; that is, let y = Ax; then"
+  },
+  {
+    "term": "max",
+    "def": "max = λ1 (attained when x = e1 )",
+    "formula": "max         = λ1     (attained when x = e1 )"
+  },
+  {
+    "term": "min",
+    "def": "min = λp (attained when x = ep )",
+    "formula": "min       = λp      (attained when x = ep )"
+  },
+  {
+    "term": "GSV",
+    "def": "p-space interpretation",
+    "formula": null
+  },
+  {
+    "term": "example if",
+    "def": "example, if p = 2, one has",
+    "formula": "example, if p = 2, one has"
+  },
+  {
+    "term": "Example",
+    "def": "Women’s Nutrition Data",
+    "formula": null
+  },
+  {
+    "term": "Mean",
+    "def": "Change location",
+    "formula": null
+  },
+  {
+    "term": "Variance",
+    "def": "No change",
+    "formula": null
+  },
+  {
+    "term": "Example",
+    "def": "Wechsler Adult Intelligence Scale",
+    "formula": null
+  },
+  {
+    "term": "Information",
+    "def": "9.086. The total variance, which is the sum of the",
+    "formula": null
+  },
+  {
+    "term": "Let",
+    "def": "Let Y = X1 + 2X2 , find the distribution of Y .",
+    "formula": "Let Y = X1 + 2X2 , find the distribution of Y ."
+  },
+  {
+    "term": "tion of X1 given X2",
+    "def": "tion of X1 given X2 = x2 is (multivariate) normal with mean and",
+    "formula": "tion of X1 given X2 = x2 is (multivariate) normal with mean and"
+  },
+  {
+    "term": "Determining the Quantiles",
+    "def": "The ith estimated quantile is",
+    "formula": null
+  },
+  {
+    "term": "Example",
+    "def": "Q-Q Plot for Board Stiffness Data: This example",
+    "formula": null
+  },
+  {
+    "term": "Example",
+    "def": "Mahalanobis Distance",
+    "formula": null
+  },
+  {
+    "term": "Example",
+    "def": "code for Q-Q plot",
+    "formula": null
+  },
+  {
+    "term": "chi square distribution with df",
+    "def": "chi-square distribution with df = 4. In the prb = line, the",
+    "formula": "chi-square distribution with df = 4. In the prb = line, the"
+  },
+  {
+    "term": "LECTURE",
+    "def": "MULTIPLE LINEAR",
+    "formula": null
+  },
+  {
+    "term": "Example",
+    "def": "IQ and Physical Characteristics",
+    "formula": null
+  },
+  {
+    "term": "Response",
+    "def": "Performance IQ scores (PIQ) from the revised Wechsler Adult Intelligence",
+    "formula": null
+  },
+  {
+    "term": "Potential predictor x1",
+    "def": "Brain size based on the count obtained from MRI scans (given as",
+    "formula": null
+  },
+  {
+    "term": "Potential predictor x2",
+    "def": "Height in inches.",
+    "formula": null
+  },
+  {
+    "term": "Potential predictor x3",
+    "def": "Weight in pounds.",
+    "formula": null
+  },
+  {
+    "term": "model PIQ",
+    "def": "model PIQ=Brain Height Weight;",
+    "formula": "model PIQ=Brain Height Weight;"
+  },
+  {
+    "term": "Example",
+    "def": "Hospital Data",
+    "formula": null
+  },
+  {
+    "term": "Data from",
+    "def": "Data from 𝑛 = 113 hospitals in the United States are used to assess factors related to the",
+    "formula": "Data from 𝑛 = 113 hospitals in the United States are used to assess factors related to the"
+  },
+  {
+    "term": "are",
+    "def": "are y = infection risk, x1 = average length of patient stay, x2 = average patient age, x3 = measure of",
+    "formula": null
+  },
+  {
+    "term": "model InfctRsk",
+    "def": "model InfctRsk=Stay Age Xray;",
+    "formula": "model InfctRsk=Stay Age Xray;"
+  },
+  {
+    "term": "variable",
+    "def": "making a useful contribution to the model. That is, given the presence of the",
+    "formula": null
+  },
+  {
+    "term": "sample coefficient",
+    "def": "hypothesized value) / standard error of coefficient.",
+    "formula": "𝑡 ∗ = (sample coefficient - hypothesized value) / standard error of coefficient."
+  },
+  {
+    "term": "regression common null hypothesis is H0",
+    "def": "β1 = 0. In this case, the reduced",
+    "formula": "regression, a common null hypothesis is H0 : β1 = 0. In this case, the reduced"
+  },
+  {
+    "term": "model",
+    "def": "obtained by \"zeroing-out\" the slope β1 that appears in the full model.",
+    "formula": null
+  },
+  {
+    "term": "model regression function",
+    "def": "almost as large as the variation around the",
+    "formula": null
+  },
+  {
+    "term": "to reject the null hypothesis H0",
+    "def": "The reduced model",
+    "formula": null
+  },
+  {
+    "term": "regression model",
+    "def": "0, we use the overall F-test reported in the analysis of",
+    "formula": null
+  },
+  {
+    "term": "and Xray",
+    "def": "useful in the model that already contains Stay.",
+    "formula": null
+  },
+  {
+    "term": "TEST1",
+    "def": "test Age=0, Xray=0;",
+    "formula": "TEST1: test Age=0, Xray=0;"
+  },
+  {
+    "term": "title Example",
+    "def": "Q-Q plot';",
+    "formula": null
+  },
+  {
+    "term": "Lecture",
+    "def": "Inferences About a Mean Vector",
+    "formula": null
+  },
+  {
+    "term": "Mean",
+    "def": "We have already seen that the mean of the sample",
+    "formula": null
+  },
+  {
+    "term": "mean vector",
+    "def": "equal to the population mean vector µ:",
+    "formula": null
+  },
+  {
+    "term": "Multivariate Setting",
+    "def": "The population variance-covariance matrix",
+    "formula": null
+  },
+  {
+    "term": "Univariate Setting",
+    "def": "Here we are going to make the additional",
+    "formula": null
+  },
+  {
+    "term": "Multivariate Setting",
+    "def": "Similarly, for the multivariate setting, we",
+    "formula": null
+  },
+  {
+    "term": "observations",
+    "def": "sampled from a normal distribution and look at",
+    "formula": null
+  },
+  {
+    "term": "Univariate Setting",
+    "def": "In the univariate setting, we see that if the",
+    "formula": null
+  },
+  {
+    "term": "Multivariate Setting",
+    "def": "A similar result is involved in the",
+    "formula": null
+  },
+  {
+    "term": "sample",
+    "def": "for all the variables:",
+    "formula": null
+  },
+  {
+    "term": "Measuring only single nutri Data",
+    "def": "p × 1 random vectors:",
+    "formula": null
+  },
+  {
+    "term": "H0",
+    "def": "µ = µ 0 We can also write this expression as shown below:",
+    "formula": "H0 : µ = µ 0   We can also write this expression as shown below:"
+  },
+  {
+    "term": "reject H0",
+    "def": "µ = µ0 if |tj | > tn−1,α/2",
+    "formula": "reject H0 : µ = µ0 if |tj | > tn−1,α/2"
+  },
+  {
+    "term": "hypothesis tests H0",
+    "def": "µj = µ0j when all of the H0 ’s are true.",
+    "formula": "hypothesis tests H0 : µj = µ0j when all of the H0 ’s are true."
+  },
+  {
+    "term": "FWER",
+    "def": "FWER = P(reject at leat one H0 |H0 is true)",
+    "formula": "FWER = P(reject at leat one H0 |H0 is true)"
+  },
+  {
+    "term": "sample variance",
+    "def": "replaced by the inverse of the sample",
+    "formula": null
+  },
+  {
+    "term": "Reject H0 when the value",
+    "def": "small (i.e., T 2 is large).",
+    "formula": null
+  },
+  {
+    "term": "After Rejection",
+    "def": "Confidence Regions",
+    "formula": null
+  },
+  {
+    "term": "General definition",
+    "def": "A confidence region is a region of likely values",
+    "formula": null
+  },
+  {
+    "term": "One at time confidence intervals",
+    "def": "This strategy essentially",
+    "formula": null
+  },
+  {
+    "term": "Simultaneous Confidence Intervals",
+    "def": "This strategy uses",
+    "formula": null
+  },
+  {
+    "term": "Bonferroni Method",
+    "def": "With this method we set a family wide",
+    "formula": null
+  },
+  {
+    "term": "Problem with One At Time Method",
+    "def": "If the confidence level is",
+    "formula": null
+  },
+  {
+    "term": "Example",
+    "def": "Suppose we have p confidence intervals for",
+    "formula": null
+  },
+  {
+    "term": "linear combinations of the population",
+    "def": "being considered,",
+    "formula": null
+  },
+  {
+    "term": "Consider linear combinations of population",
+    "def": "as below:",
+    "formula": null
+  },
+  {
+    "term": "anything other than the",
+    "def": "by themselves, then the simultaneous",
+    "formula": null
+  },
+  {
+    "term": "Prob all intervals are valid",
+    "def": "Prob{all intervals are valid} = 1 − Prob{at least 1 false}",
+    "formula": "Prob{all intervals are valid} = 1 − Prob{at least 1 false}"
+  },
+  {
+    "term": "all intervals are ture",
+    "def": "P{all intervals are ture} ≥ 1 − m × α/m = 1 − α.",
+    "formula": "P{all intervals are ture} ≥ 1 − m × α/m = 1 − α."
+  },
+  {
+    "term": "Example",
+    "def": "Womens Nutrition Data and Associated",
+    "formula": null
+  },
+  {
+    "term": "sample",
+    "def": "and recommended dietary intake, it appears that",
+    "formula": null
+  },
+  {
+    "term": "Problem",
+    "def": "The problem with these one-at-a-time intervals is that",
+    "formula": null
+  },
+  {
+    "term": "Consequence",
+    "def": "We are less than 95% confident that all of the",
+    "formula": null
+  },
+  {
+    "term": "freedom for",
+    "def": "freedom for α = 0.05, the critical value is 2.21. Thus, for calcium,",
+    "formula": "freedom for α = 0.05, the critical value is 2.21. Thus, for calcium,"
+  },
+  {
+    "term": "intervals for population",
+    "def": "using the three methods discussed",
+    "formula": null
+  }
+]

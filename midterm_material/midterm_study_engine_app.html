@@ -1,0 +1,653 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Midterm Study Sprint</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg:#f4f7fb; --card:#fff; --text:#0f172a; --muted:#64748b; --line:#dbe5f0; --primary:#0ea5a4; --primary2:#0891b2; --ok:#16a34a; --bad:#dc2626; --shadow:0 18px 40px rgba(2,8,23,.12); }
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;font-family:Manrope,system-ui,sans-serif;color:var(--text);background:radial-gradient(1000px 380px at -10% -15%, #ccfbf1 0%, transparent 60%),radial-gradient(900px 360px at 110% -15%, #dbeafe 0%, transparent 58%),var(--bg);display:grid;place-items:center;padding:18px}
+    .app{width:min(980px,100%);display:grid;gap:14px}
+    .top,.card{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
+    .top{padding:12px 14px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+    .chips{display:flex;gap:8px;flex-wrap:wrap}
+    .chip{background:#eef3f9;border:1px solid #d7e3f1;border-radius:999px;padding:6px 10px;font-size:13px;font-weight:700;color:#334155}
+    .card{padding:clamp(16px,2.5vw,28px)}
+    .start h1{margin:0 0 8px;font-size:clamp(26px,4vw,40px);letter-spacing:-.02em}
+    .start p{margin:0;color:var(--muted)}
+    .meta{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap}
+    .badge{font-family:"JetBrains Mono",monospace;background:#f8fafc;border:1px solid #e2e8f0;border-radius:9px;padding:6px 8px;font-size:12px;color:#334155}
+    button{border:none;border-radius:12px;font:inherit;cursor:pointer;transition:transform .12s ease,filter .12s ease}
+    button:active{transform:translateY(1px)}
+    .primary{margin-top:16px;background:linear-gradient(135deg,var(--primary),var(--primary2));color:#fff;font-weight:800;padding:11px 16px}
+    .quiz,.summary{display:none}
+    .qtype{text-transform:uppercase;letter-spacing:.09em;font-size:12px;font-weight:800;color:#0f766e}
+    .qtext{margin:8px 0 0;font-size:clamp(20px,2.8vw,31px);line-height:1.28;letter-spacing:-.015em}
+    .qtopic{margin-top:8px;color:var(--muted);font-size:13px;font-weight:700}
+    .formula{margin-top:10px;font-family:"JetBrains Mono",monospace;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:8px 10px;color:#334155}
+    .options{display:grid;gap:10px;margin-top:16px}
+    .opt{text-align:left;background:#fff;border:1px solid #dce4ee;border-radius:12px;padding:12px 14px;min-height:50px;font-size:15px;color:#0f172a}
+    .opt:hover{filter:brightness(.985)}
+    .opt.selected{border-color:#60a5fa;background:#eff6ff;color:#1e3a8a}
+    .opt.correct{border-color:#34d399;background:#ecfdf5;color:#065f46}
+    .opt.wrong{border-color:#fda4af;background:#fff1f2;color:#9f1239}
+    .opt.locked{pointer-events:none}
+    .fill-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+    .fill-input{flex:1;min-width:220px;border:1px solid #dce4ee;border-radius:11px;padding:11px 12px;font:500 14px "JetBrains Mono",monospace}
+    .feedback{margin-top:14px;border:1px dashed #cbd5e1;border-radius:12px;background:#f8fafc;padding:10px 12px;font-size:14px;min-height:56px;color:#334155}
+    .feedback.ok{background:#ecfdf5;border-color:#86efac;color:#14532d}
+    .feedback.bad{background:#fff1f2;border-color:#fda4af;color:#881337}
+    .controls{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap}
+    .ghost{background:#edf2f8;border:1px solid #d9e4f2;color:#334155;padding:10px 12px;font-weight:700}
+    .next{background:linear-gradient(135deg,var(--primary),var(--primary2));color:#fff;padding:10px 14px;font-weight:800}
+    .next:disabled{opacity:.55;cursor:not-allowed}
+    .progress{margin-top:12px;height:8px;border-radius:999px;overflow:hidden;background:#e2e8f0}
+    .bar{height:100%;width:0;background:linear-gradient(90deg,#22c55e,#10b981);transition:width .25s ease}
+    .summary h2{margin:0 0 8px;font-size:30px}
+    .summary p{margin:6px 0;color:#334155}
+  </style>
+</head>
+<body>
+<div class="app">
+  <div class="top">
+    <div class="chips">
+      <div class="chip" id="scoreChip">Score: 0 / 0</div>
+      <div class="chip" id="leftChip">Remaining: 0</div>
+      <div class="chip" id="typeChip">Type: -</div>
+    </div>
+    <div class="chips">
+      <div class="chip" id="qcountChip">Questions: 0</div>
+      <div class="chip" id="tfChip">True/False: 0</div>
+    </div>
+  </div>
+
+  <section class="card start" id="startView">
+    <h1>Midterm Study Sprint</h1>
+    <p>Manual question bank based on midterm practical topics and lecture cross-reference.</p>
+    <div class="meta">
+      <span class="badge">50+ questions</span>
+      <span class="badge">MC + Select All + Fill Blank + True/False</span>
+      <span class="badge">Formula-focused where needed</span>
+    </div>
+    <button class="primary" id="startBtn">Start Session</button>
+  </section>
+
+  <section class="card quiz" id="quizView">
+    <div class="qtype" id="qType">multiple_choice</div>
+    <h2 class="qtext" id="qText"></h2>
+    <div class="qtopic" id="qTopic"></div>
+    <div class="formula" id="formulaBox" style="display:none"></div>
+    <div id="answerArea"></div>
+    <div class="feedback" id="feedback">Choose an answer.</div>
+    <div class="controls">
+      <button class="ghost" id="skipBtn">Skip</button>
+      <button class="next" id="nextBtn" disabled>Next Question</button>
+    </div>
+    <div class="progress"><div class="bar" id="bar"></div></div>
+  </section>
+
+  <section class="card summary" id="summaryView">
+    <h2>Session Complete</h2>
+    <p id="finalScore"></p>
+    <p id="finalPct"></p>
+    <p id="weakAreas"></p>
+    <button class="primary" id="restartBtn">Restart</button>
+  </section>
+</div>
+
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const state = { bank: [], queue: [], index: 0, correct: 0, answered: false, current: null, wrongTopics: new Map() };
+
+  const scoreChip = $("scoreChip");
+  const leftChip = $("leftChip");
+  const typeChip = $("typeChip");
+  const qcountChip = $("qcountChip");
+  const tfChip = $("tfChip");
+  const startView = $("startView");
+  const quizView = $("quizView");
+  const summaryView = $("summaryView");
+  const qType = $("qType");
+  const qText = $("qText");
+  const qTopic = $("qTopic");
+  const formulaBox = $("formulaBox");
+  const answerArea = $("answerArea");
+  const feedback = $("feedback");
+  const nextBtn = $("nextBtn");
+  const skipBtn = $("skipBtn");
+  const bar = $("bar");
+
+  function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+  function norm(s){return String(s||"").toLowerCase().replace(/[^a-z0-9\s]/g," ").replace(/\s+/g," ").trim();}
+  function tidyText(s){
+    let t = String(s || "").replace(/\s+/g, " ").trim();
+    t = t.replace(/\s+([,.;:!?])/g, "$1");
+    return t;
+  }
+  function ensureQuestionPunctuation(q){
+    let t = tidyText(q);
+    if (!t) return "";
+    if (!/[?]$/.test(t)) t += "?";
+    return t;
+  }
+  function ensureSentence(s){
+    let t = tidyText(s);
+    if (!t) return "";
+    if (!/[.!?]$/.test(t)) t += ".";
+    return t;
+  }
+  function hasReasonableWords(s, minWords=4){
+    const words = tidyText(s).split(" ").filter(Boolean);
+    return words.length >= minWords;
+  }
+  function validateAndCleanQuestion(q){
+    if (!q || typeof q !== "object") return null;
+    q.topic = tidyText(q.topic);
+    q.question = ensureQuestionPunctuation(q.question);
+    q.explanation = ensureSentence(q.explanation);
+    q.formula = tidyText(q.formula || "");
+    q.snippet = tidyText(q.snippet || "");
+
+    if (!q.topic || !q.question || !q.explanation) return null;
+    if (!hasReasonableWords(q.question, 4)) return null;
+    if (!hasReasonableWords(q.explanation, 4)) return null;
+
+    if (q.type === "multiple_choice" || q.type === "true_false") {
+      if (!Array.isArray(q.options) || q.options.length !== (q.type === "true_false" ? 2 : 4)) return null;
+      q.options = q.options.map(o => ({ text: tidyText(o.text), correct: !!o.correct }));
+      if (q.options.some(o => !o.text || !hasReasonableWords(o.text, 1))) return null;
+      const unique = new Set(q.options.map(o => norm(o.text)));
+      if (unique.size !== q.options.length) return null;
+      if (q.options.filter(o => o.correct).length !== 1) return null;
+      return q;
+    }
+
+    if (q.type === "select_all") {
+      if (!Array.isArray(q.options) || q.options.length !== 4) return null;
+      q.options = q.options.map(o => ({ text: tidyText(o.text), correct: !!o.correct }));
+      if (q.options.some(o => !o.text || !hasReasonableWords(o.text, 1))) return null;
+      const unique = new Set(q.options.map(o => norm(o.text)));
+      if (unique.size !== q.options.length) return null;
+      if (q.options.filter(o => o.correct).length < 1) return null;
+      return q;
+    }
+
+    if (q.type === "fill_blank") {
+      if (!Array.isArray(q.acceptedAnswers) || q.acceptedAnswers.length < 1) return null;
+      q.acceptedAnswers = q.acceptedAnswers.map(a => norm(a)).filter(Boolean);
+      if (!q.acceptedAnswers.length) return null;
+      return q;
+    }
+    return null;
+  }
+  function sanitizeBank(bank){
+    const out = [];
+    const seen = new Set();
+    for (const raw of bank) {
+      const cleaned = validateAndCleanQuestion(structuredClone(raw));
+      if (!cleaned) continue;
+      const key = `${cleaned.type}|${norm(cleaned.topic)}|${norm(cleaned.question)}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      out.push(cleaned);
+    }
+    return out;
+  }
+
+  function addQuestion(bank, q){ bank.push({ id: bank.length + 1, ...q }); }
+  function mc(topic, question, options, correctIndex, explanation, formula="", snippet=""){ return { type:"multiple_choice", topic, question, explanation, formula, snippet, options: options.map((t,i)=>({text:t,correct:i===correctIndex}))}; }
+  function tf(topic, question, trueIsCorrect, explanation, formula="", snippet=""){ return { type:"true_false", topic, question, explanation, formula, snippet, options:[{text:"True",correct:!!trueIsCorrect},{text:"False",correct:!trueIsCorrect}]}; }
+  function selectAll(topic, question, options, explanation, formula="", snippet=""){ return { type:"select_all", topic, question, explanation, formula, snippet, options }; }
+  function fillBlank(topic, question, acceptedAnswers, explanation, formula="", snippet=""){ return { type:"fill_blank", topic, question, explanation, formula, snippet, acceptedAnswers: acceptedAnswers.map(norm) }; }
+
+  function buildQuestionBank(){
+    const bank = [];
+
+    [
+      ["Multivariate", "Which statement must be true for any valid covariance matrix Σ?", ["All entries must be positive", "It must be symmetric", "All correlations must equal 1", "It must be diagonal"], 1, "A covariance matrix is always symmetric."],
+      ["Multivariate", "Which quantity gives correlation between X1 and X2?", ["σ12", "σ12 / √(σ11σ22)", "σ11σ22", "σ12^2"], 1, "Correlation standardizes covariance by both standard deviations.", "ρ12 = σ12 / sqrt(σ11 σ22)"],
+      ["Multivariate", "For jointly normal variables, zero covariance implies:", ["Always dependence", "Independence", "Perfect negative correlation", "Non-normal marginals"], 1, "Within multivariate normal models, zero covariance implies independence."],
+      ["Multivariate", "For a linear combination Y = a'X, the mean is:", ["a + μ", "a'μ", "μ'aμ", "a'Σa"], 1, "Mean of linear combination is a'μ.", "E(Y) = a'μ"],
+      ["Multivariate", "For Y = a'X, the variance is:", ["a'μ", "μ'Σμ", "a'Σa", "trace(Σ)"], 2, "Variance of a linear combination is a'Σa.", "Var(Y) = a'Σa"],
+      ["Multivariate", "In a bivariate normal model, each marginal distribution is:", ["Uniform", "Normal", "Exponential", "Bernoulli"], 1, "Marginals of multivariate normal distributions are normal."],
+      ["Multivariate", "Which diagonal element of Σ equals Var(X2)?", ["σ12", "σ22", "σ21", "ρ22"], 1, "Diagonal entries are variances."],
+      ["Multivariate", "A matrix cannot be a covariance matrix if it has:", ["A negative covariance between two variables", "A negative diagonal variance term", "Large positive covariance values", "Different units across variables"], 1, "Variances (diagonal entries) cannot be negative."],
+      ["Hotelling T2", "Hotelling's T² one-sample test is primarily used to test:", ["A single variance", "A mean vector against μ0", "Two independent proportions", "Correlation equals zero"], 1, "Hotelling T² tests a multivariate mean vector."],
+      ["Hotelling T2", "Which statistic is correct for one-sample Hotelling T²?", ["(x̄-μ0)'S(x̄-μ0)", "n(x̄-μ0)'S^{-1}(x̄-μ0)", "(x̄-μ0)'Σ^{-1}(x̄-μ0)/n", "MSR/MSE"], 1, "The one-sample T² uses n and S^{-1}.", "T² = n (x̄-μ0)' S^{-1} (x̄-μ0)"],
+      ["Confidence Regions", "Compared with one-at-a-time CIs, simultaneous T² intervals are usually:", ["Narrower", "Wider", "Identical", "Undefined"], 1, "Simultaneous control increases interval width."],
+      ["Bonferroni", "For m parameters with two-sided family confidence 1-α, each Bonferroni CI uses:", ["α/m", "α/(2m)", "2α/m", "α/2"], 1, "Two-sided Bonferroni allocates α/(2m) per tail."],
+      ["Bonferroni", "Main reason to use Bonferroni one-at-a-time intervals:", ["Reduce sample size", "Control family-wise Type I error", "Improve normality", "Force equal widths"], 1, "Bonferroni controls family-wise error when making multiple inferences."],
+      ["Regression", "In y = β0 + β1x1 + β2x2 + ε, β1 represents:", ["Total effect without controls", "Change in E(y) for one-unit x1 increase holding x2 fixed", "Change in x1 per unit y", "Error variance"], 1, "Slope is interpreted conditionally on other predictors."],
+      ["Regression", "The residual for observation i is:", ["ŷi - yi", "yi - ŷi", "yi - ȳ", "ŷi - ȳ"], 1, "Residual is observed minus fitted value.", "e_i = y_i - ŷ_i"],
+      ["Regression", "MSE in multiple regression equals:", ["SSE/(n-1)", "SSE/(n-p)", "SSR/(p-1)", "SST/(n-p)"], 1, "MSE uses error degrees of freedom n-p.", "MSE = SSE/(n-p)"],
+      ["Regression", "ANOVA F statistic for overall significance is:", ["MSR/MSE", "MSE/MSR", "(SSR/df_err)/(SSE/df_reg)", "(SST/df_total)/(SSE/df_err)"], 0, "Overall F compares explained to unexplained mean squares.", "F = MSR/MSE"],
+      ["Regression", "ANOVA identity in regression is:", ["SST = SSE - SSR", "SST = SSR + SSE", "SSE = SST + SSR", "SSR = SST + MSE"], 1, "Total variability splits into regression and error."],
+      ["Regression", "If p is number of coefficients (including intercept), df for error is:", ["n-p", "n-1", "p-1", "n+p"], 0, "Error df equals n minus number of estimated coefficients."],
+      ["Regression", "If p is number of coefficients (including intercept), df for regression is:", ["n-p", "p-1", "p", "n-1"], 1, "Regression df excludes intercept: p-1."],
+      ["Regression", "A 100(1-α)% CI for βj is generally:", ["bj ± zα/2 * σ", "bj ± t* SE(bj)", "bj ± F* MSE", "bj ± SSE"], 1, "Coefficient CI uses t critical and standard error.", "CI: b_j ± t*SE(b_j)"],
+      ["Regression", "Testing H0: βj = 0 typically uses:", ["χ² test", "t test on b_j/SE(b_j)", "paired t-test", "sign test"], 1, "Individual slope significance is tested with t-statistic."],
+      ["Regression", "If p-value for β3 is less than α, conclusion is:", ["Retain H0 because effect may be small", "Reject H0: β3 = 0 at level α", "Conclude all coefficients are nonzero", "Conclude model assumptions are violated"], 1, "p < α implies reject the null."],
+      ["Regression", "Adjusted R² can decrease when adding predictors because:", ["SSE always increases", "Penalty for degrees of freedom may outweigh SSE drop", "R² must fall", "Model becomes nonlinear"], 1, "Adjusted R² accounts for model complexity."],
+      ["Regression", "R² measures:", ["Proportion of variance in y explained by model", "Probability model is correct", "Residual normality", "Parameter significance"], 0, "R² is explained variability proportion."],
+      ["Regression", "A residual-vs-fitted plot that looks like a random horizontal band suggests:", ["Severe heteroscedasticity", "Model assumptions are more plausible", "Perfect multicollinearity", "Missing response variable"], 1, "Random band pattern is desirable."],
+      ["Regression", "Prediction interval for a new y at x0 is usually ______ than CI for mean response at x0.", ["Narrower", "Wider", "Identical", "Unrelated"], 1, "Prediction intervals include individual error variation."],
+      ["Model Assumptions", "Classical linear model assumes error terms are:", ["Independent, mean 0, constant variance, normal (for inference)", "Always zero", "Uniformly distributed", "Perfectly correlated"], 0, "These are standard regression assumptions for inference."],
+      ["Model Assumptions", "Severe multicollinearity typically leads to:", ["Smaller SEs for slopes", "Larger SEs and unstable slope estimates", "Guaranteed higher R² only", "No effect"], 1, "Collinearity inflates uncertainty in coefficient estimates."],
+      ["Practical Midterm", "In a two-variable mean test for female vs male kite means, the natural null is:", ["H0: μ1 = μ2", "H0: μ = (190,275)'", "H0: β1=β2=0", "H0: Σ=I"], 1, "The practical states known male means for tail and wing lengths.", "", "Female kite sample has X1=tail length and X2=wing length; known male means are (190,275)."],
+      ["Practical Midterm", "For regression model Final = β0 + β1Test1 + β2Test2 + β3Assn + ε, completing ANOVA table requires:", ["Only coefficient signs", "SSR, SSE, and corresponding dfs", "Only R² and adjusted R²", "Only p-values for each slope"], 1, "ANOVA table is built from sums of squares and degrees of freedom.", "", "Model: Final = β0 + β1 Test1 + β2 Test2 + β3 Assn + ε"],
+      ["Practical Midterm", "If Hotelling T² rejects H0: μ=(0,0)', it is still possible that univariate tests for μ1 and μ2 are both non-significant because:", ["This is impossible under any circumstances", "Joint test can detect combined multivariate departure", "Univariate tests are always stronger than joint tests", "Bonferroni guarantees rejection of both marginals"], 1, "Joint multivariate structure can yield different conclusions."],
+      ["Correlation", "A correlation near 0 implies:", ["No linear association", "No association of any kind", "Perfect nonlinear association", "Variables are always independent"], 0, "Near-zero correlation means little linear relationship only."],
+      ["Covariance", "A positive covariance between X and Y indicates:", ["X and Y always equal", "They tend to increase together", "Y decreases when X increases", "No relationship"], 1, "Positive covariance suggests co-movement in same direction."],
+      ["Matrix Form", "In matrix notation for linear regression, the fitted values vector is:", ["Xβ", "Xb", "S^{-1}y", "(X'X)^{-1}y"], 1, "Using estimates b, fitted values are ŷ = Xb."],
+      ["Matrix Form", "The least squares estimator in matrix form is:", ["b = X'y", "b = (X'X)^{-1}X'y", "b = XX'y", "b = yX"], 1, "OLS normal equations lead to b = (X'X)^{-1}X'y."],
+      ["Inference", "In large samples, if a 90% CI for β2 does not include 0, then testing H0:β2=0 at α=0.10 gives:", ["Fail to reject", "Reject H0", "Need ANOVA only", "Inconclusive by definition"], 1, "Excluding zero in the matching CI implies significance at that α."],
+      ["ANOVA", "MSR is computed as:", ["SSR / (p-1)", "SSE / (n-p)", "SST / (n-1)", "SSE / (p-1)"], 0, "Mean square regression divides SSR by regression df."],
+      ["ANOVA", "If SSE and MSE are known, error df equals:", ["SSE × MSE", "SSE / MSE", "MSE / SSE", "SST / SSR"], 1, "Since MSE = SSE/df_error, df_error = SSE/MSE."],
+      ["Regression Diagnostics", "Which pattern in residual-vs-fitted suggests heteroscedasticity?", ["Random constant-width cloud", "Funnel-shaped spread", "Single horizontal line at 0", "No points"], 1, "Changing spread across fitted values suggests non-constant variance."],
+      ["Confidence Intervals", "One-at-a-time intervals for μ1 and μ2 are built from:", ["Hotelling critical value only", "Univariate means, standard errors, and t critical values", "Only covariance matrix determinant", "ANOVA F statistic"], 1, "Each one-at-a-time CI uses univariate t-based form."],
+      ["Hypothesis Testing", "For two-tailed test H0: β3 = 0, an equivalent decision rule is:", ["Reject if |t| is small", "Reject if |t| exceeds critical value", "Reject if β3 > 0 only", "Reject whenever R² > 0"], 1, "Two-tailed slope tests reject for large absolute t values."],
+      ["Formulas", "For an overall regression F test with k predictors (no. predictors excluding intercept), numerator df is:", ["n-k-1", "k", "k+1", "n-1"], 1, "Overall F uses df1 = k, df2 = n-k-1."],
+      ["Formulas", "With k predictors and intercept, p equals:", ["k", "k+1", "n-k", "n-1"], 1, "p counts all coefficients including intercept."],
+      ["Interpretation", "If β2 estimate is positive and significant, practical interpretation is:", ["x2 causes y with certainty", "Holding other predictors fixed, y tends to increase as x2 increases", "x2 has no relationship with y", "Model is invalid"], 1, "Regression implies conditional association, not guaranteed causation."],
+      ["Practical Midterm", "When asked to complete an ANOVA table in a fitted model, the core computational relationship to use first is:", ["SST = SSR + SSE", "T² = n(x̄-μ0)'S^{-1}(x̄-μ0)", "ρ = σ12/√(σ11σ22)", "AdjR² = 1 - MSE/MSTO"], 0, "ANOVA completion typically begins with SST decomposition.", "", "Given ANOVA columns usually include Source, DF, SS, MS, and F."]
+    ].forEach(d => addQuestion(bank, mc(...d)));
+
+    [
+      ["ANOVA Snippet", "Given n = 20 and p = 4 coefficients (including intercept), what is the error degrees of freedom?", ["16", "15", "4", "19"], 0, "Error df is n - p.", "df_error = n - p", "Snippet: n=20 observations, model has β0,β1,β2,β3."],
+      ["ANOVA Snippet", "Given SSE = 120 and df_error = 15, what expression gives MSE?", ["120/15", "15/120", "120-15", "120+15"], 0, "MSE is SSE divided by error df.", "MSE = SSE/df_error", "Snippet: SSE=120, df_error=15."],
+      ["Regression Output Snippet", "Given b3 = 0.42 and SE(b3)=0.14, which test statistic form is used for H0: β3=0?", ["F = b3/SE(b3)", "t = b3/SE(b3)", "χ² = b3²/SE(b3)", "z = SE(b3)/b3"], 1, "Individual slope tests use t = b/SE(b).", "t = b_j / SE(b_j)", "Snippet: coefficient estimate and standard error are provided."],
+      ["Hotelling Snippet", "Given x̄, S, μ0, and n, which matrix expression is Hotelling one-sample T²?", ["(x̄-μ0)'S(x̄-μ0)", "n(x̄-μ0)'S^{-1}(x̄-μ0)", "n(x̄-μ0)S^{-1}(x̄-μ0)", "(x̄-μ0)'Σ^{-1}(x̄-μ0)/n"], 1, "One-sample Hotelling uses n and S inverse.", "T² = n(x̄-μ0)'S^{-1}(x̄-μ0)", "Snippet: test is one-sample mean-vector test."],
+      ["Correlation Snippet", "Given σ11 = 4, σ22 = 9, and σ12 = 3, which setup computes ρ12?", ["3/(4×9)", "3/√(4×9)", "√3/(4+9)", "(4+9)/3"], 1, "Correlation uses covariance divided by product of SDs.", "ρ12 = σ12 / √(σ11σ22)", "Snippet: covariance matrix entries are given."],
+      ["CI Snippet", "Given m=2 means and family confidence 95%, which tail level is used for Bonferroni two-sided CIs?", ["0.05/2", "0.05/(2×2)", "0.95/2", "0.05/4 then divide by n"], 1, "Use α/(2m) in each tail.", "tail α* = α/(2m)", "Snippet: m=2 parameters, α=0.05."]
+    ].forEach(d => addQuestion(bank, mc(...d)));
+
+    [
+      ["Covariance Matrix", "Select all properties required of a covariance matrix.", [
+        {text:"Symmetric", correct:true},
+        {text:"Diagonal entries are variances and must be nonnegative", correct:true},
+        {text:"Must have all off-diagonal entries equal 0", correct:false},
+        {text:"Must be positive semidefinite", correct:true}
+      ], "Covariance matrices are symmetric positive semidefinite with nonnegative variances."],
+      ["Multivariate Normal", "Select all statements that are true under multivariate normality.", [
+        {text:"Every marginal distribution is normal", correct:true},
+        {text:"Zero covariance implies independence", correct:true},
+        {text:"Variables must have equal variances", correct:false},
+        {text:"Any linear combination is normal", correct:true}
+      ], "These are key multivariate normal properties."],
+      ["Regression Assumptions", "Select all standard assumptions used for multiple linear regression inference.", [
+        {text:"Errors have mean 0", correct:true},
+        {text:"Errors have constant variance", correct:true},
+        {text:"Errors are independent", correct:true},
+        {text:"Predictors must be normally distributed", correct:false}
+      ], "Normality is assumed for errors (for exact finite-sample inference), not necessarily predictors."],
+      ["ANOVA Table", "Select all quantities needed to complete a standard regression ANOVA table.", [
+        {text:"SST, SSR, SSE", correct:true},
+        {text:"Degrees of freedom for regression and error", correct:true},
+        {text:"MSR and MSE", correct:true},
+        {text:"Covariance matrix determinant only", correct:false}
+      ], "ANOVA table is built from sums of squares, dfs, and mean squares."],
+      ["Bonferroni", "Select all correct statements about Bonferroni intervals.", [
+        {text:"They control family-wise error rate", correct:true},
+        {text:"They are typically wider than unadjusted one-at-a-time intervals", correct:true},
+        {text:"They require all variables to be independent", correct:false},
+        {text:"For m two-sided intervals, α/(2m) appears in each tail", correct:true}
+      ], "Bonferroni is conservative and controls family-wise Type I error."],
+      ["Linear Combination", "For Y = a'X, select all correct formulas.", [
+        {text:"E(Y)=a'μ", correct:true},
+        {text:"Var(Y)=a'Σa", correct:true},
+        {text:"Y is normal if X is multivariate normal", correct:true},
+        {text:"Var(Y)=a'μa", correct:false}
+      ], "Mean and variance forms follow directly from linear combination theory."],
+      ["Hypothesis Testing", "Select all equivalent ways to reject H0: βj = 0 at level α in standard regression.", [
+        {text:"|t| exceeds critical t", correct:true},
+        {text:"p-value < α", correct:true},
+        {text:"CI for βj excludes 0 at matching confidence", correct:true},
+        {text:"R² > 0", correct:false}
+      ], "These are equivalent under standard linear-model inference."],
+      ["Practical Midterm", "For testing female kite mean vector against known male means, select all pieces required for one-sample Hotelling T² setup.", [
+        {text:"Sample mean vector x̄", correct:true},
+        {text:"Sample covariance matrix S", correct:true},
+        {text:"Reference vector μ0=(190,275)'", correct:true},
+        {text:"Regression coefficient table", correct:false}
+      ], "Hotelling T² uses x̄, S, μ0, and sample size n."],
+      ["ANOVA Completion", "If asked to complete an ANOVA table, select all formulas commonly used.", [
+        {text:"SST = SSR + SSE", correct:true},
+        {text:"MSR = SSR/df_reg", correct:true},
+        {text:"MSE = SSE/df_err", correct:true},
+        {text:"F = MSE/MSR", correct:false}
+      ], "F uses MSR/MSE, not the reverse."],
+      ["Model Interpretation", "Select all valid interpretations in multiple regression.", [
+        {text:"βj is a conditional effect holding other predictors fixed", correct:true},
+        {text:"Significance proves causality by default", correct:false},
+        {text:"Intercept is expected y when predictors are 0", correct:true},
+        {text:"Residuals are yi - ŷi", correct:true}
+      ], "Conditional interpretation is key; causality needs stronger design assumptions."]
+    ].forEach(d => addQuestion(bank, selectAll(...d)));
+
+    [
+      ["Formulas", "Fill in the blank: ρ12 = __________.", ["sigma12 / sqrt(sigma11 sigma22)", "σ12 / sqrt(σ11σ22)", "s12 / sqrt(s11 s22)"], "Correlation is covariance divided by product of standard deviations.", "ρ12 = σ12 / √(σ11σ22)"],
+      ["Formulas", "Fill in the blank: T² = __________ for one-sample Hotelling test.", ["n(xbar-mu0)' s^-1 (xbar-mu0)", "n(x̄-μ0)'S^{-1}(x̄-μ0)"], "This is the standard one-sample Hotelling T² statistic.", "T² = n(x̄-μ0)'S^{-1}(x̄-μ0)"],
+      ["Formulas", "Fill in the blank: MSE = SSE / __________.", ["n-p"], "Error mean square divides SSE by error df.", "MSE = SSE/(n-p)"],
+      ["Formulas", "Fill in the blank: F = __________ in regression ANOVA.", ["msr/mse", "MSR/MSE"], "Overall F compares model mean square to error mean square.", "F = MSR/MSE"],
+      ["Formulas", "Fill in the blank: SST = __________.", ["ssr + sse", "SSR + SSE"], "Total variability equals explained plus unexplained variability.", "SST = SSR + SSE"],
+      ["Formulas", "Fill in the blank: residual e_i = __________.", ["y_i - yhat_i", "yi - yhat_i", "y_i-ŷ_i", "yi-ŷi"], "Residual is observed minus fitted value.", "e_i = y_i - ŷ_i"],
+      ["Formulas", "Fill in the blank: fitted value ŷ_i = __________ in multiple regression.", ["b0 + b1x_i1 + b2x_i2 + ...", "b0 + sum b_j x_ij"], "Predicted response is the estimated linear predictor."],
+      ["Formulas", "Fill in the blank: For Y=a'X, Var(Y)= __________.", ["a' sigma a", "a'Σa", "a' s a"], "Variance of a linear combination uses covariance matrix."],
+      ["Bonferroni", "Fill in the blank: For m parameters, two-sided Bonferroni tail level is __________.", ["alpha/(2m)", "α/(2m)"], "Bonferroni divides α across both tails and all parameters."],
+      ["Adjusted R2", "Fill in the blank: Adjusted R² = 1 - __________.", ["mse/msto", "MSE/MSTO"], "Adjusted R² compares error mean square to total mean square.", "R²_adj = 1 - MSE/MSTO"]
+    ].forEach(d => addQuestion(bank, fillBlank(...d)));
+
+    [
+      ["True/False", "In general (without normality assumptions), zero covariance always implies independence.", false, "False. Zero covariance does not imply independence in general."],
+      ["True/False", "For multivariate normal variables, zero covariance implies independence.", true, "True for jointly normal variables."],
+      ["True/False", "A covariance matrix can have a negative diagonal entry if correlations are strong enough.", false, "False. Diagonal entries are variances and must be nonnegative."],
+      ["True/False", "Adding a predictor always increases ordinary R².", true, "True. R² is nondecreasing with additional predictors."],
+      ["True/False", "Adding a predictor always increases adjusted R².", false, "False. Adjusted R² can decrease when added predictors are not useful."],
+      ["True/False", "If a 95% CI for βj includes 0, then a two-sided α=0.05 test of H0:βj=0 would fail to reject.", true, "True when the CI/test are based on the same model assumptions."],
+      ["True/False", "Prediction intervals are usually wider than confidence intervals for mean response at the same x0.", true, "True because prediction intervals include individual-level variation."],
+      ["True/False", "In ANOVA for regression, df_error = n - p where p includes the intercept.", true, "True by definition of regression degrees of freedom."],
+      ["True/False", "A random horizontal residual-vs-fitted pattern is typically consistent with model assumptions.", true, "True; this is a desirable diagnostic pattern."],
+      ["True/False", "Rejecting Hotelling T² for μ=(0,0)' guarantees each univariate test must reject at the same α.", false, "False. Joint and individual tests can disagree."]
+    ].forEach(d => addQuestion(bank, tf(...d)));
+
+    const tfCount = bank.filter(q => q.type === "true_false").length;
+    if (bank.length < 50) throw new Error("Question bank must be at least 50.");
+    if (tfCount > Math.floor(bank.length * 0.2)) throw new Error("True/False exceeds allowed proportion.");
+    return bank;
+  }
+
+  function hardenMultipleChoice(bank){
+    function toSentence(text){
+      let t = String(text || "").replace(/\s+/g, " ").trim();
+      if (!t) return "";
+      t = t.charAt(0).toUpperCase() + t.slice(1);
+      if (!/[.!?]$/.test(t)) t += ".";
+      return t;
+    }
+
+    function mutateFormula(correct){
+      const candidates = [];
+      const c = String(correct);
+      const rules = [
+        [/(α|alpha)\s*\/\s*\(2m\)/gi, "α / m"],
+        [/(α|alpha)\s*\/\s*m/gi, "α / (2m)"],
+        [/\(2m\)/gi, "(2m - 1)"],
+        [/\(2m\)/gi, "(m - 1)"],
+        [/n\s*-\s*p/gi, "n - p - 1"],
+        [/n\s*-\s*p/gi, "n - 1"],
+        [/p\s*-\s*1/gi, "p"],
+        [/MSR\s*\/\s*MSE/gi, "MSE / MSR"],
+        [/SST\s*=\s*SSR\s*\+\s*SSE/gi, "SSE = SSR + SST"],
+        [/SSE\s*\/\s*\(n\s*-\s*p\)/gi, "SSE / (n - 1)"],
+        [/SSE\s*\/\s*\(n\s*-\s*p\)/gi, "SSE / (p - 1)"],
+        [/S\^{-1}/g, "S"],
+        [/a'Σa/g, "a'μa"],
+        [/a'μ/g, "a'Σa"]
+      ];
+      for (const [replFrom, replTo] of rules) {
+        if (replFrom.test(c)) {
+          candidates.push(c.replace(replFrom, replTo));
+        }
+      }
+      // Generic factor-of-2 and denominator swaps
+      if (/\//.test(c)) {
+        candidates.push(c.replace("/", " / 2×"));
+        candidates.push(c.replace("/", " / ("));
+      }
+      return candidates.map(toSentence).filter(x => norm(x) !== norm(correct));
+    }
+
+    function mutateSentence(correct){
+      const c = String(correct);
+      const swaps = [
+        ["increases", "decreases"],
+        ["decreases", "increases"],
+        ["reject", "retain"],
+        ["retain", "reject"],
+        ["wider", "narrower"],
+        ["narrower", "wider"],
+        ["independence", "dependence"],
+        ["dependence", "independence"],
+        ["symmetric", "non-symmetric"],
+        ["nonnegative", "negative"],
+        ["holding other predictors fixed", "without holding other predictors fixed"],
+        ["multivariate", "univariate"]
+      ];
+      const out = [];
+      for (const [a, b] of swaps) {
+        const re = new RegExp(`\\b${a.replace(/[.*+?^${}()|[\\]\\\\]/g, "\\\\$&")}\\b`, "i");
+        if (re.test(c)) out.push(c.replace(re, b));
+      }
+      if (/\bnot\b/i.test(c)) out.push(c.replace(/\bnot\b/i, ""));
+      else out.push(c.replace(/\bis\b/i, "is not"));
+      return out.map(toSentence).filter(x => norm(x) !== norm(correct));
+    }
+
+    function buildDistractorsFromCorrect(correctText){
+      const isFormulaLike = /[=√Σρμβ'()\/\+\-]/.test(correctText);
+      const pool = isFormulaLike ? mutateFormula(correctText) : mutateSentence(correctText);
+      const unique = [];
+      for (const p of pool) {
+        if (unique.some(u => norm(u) === norm(p))) continue;
+        unique.push(p);
+        if (unique.length === 3) break;
+      }
+      // fallback same-concept wording tweaks if needed
+      while (unique.length < 3) {
+        const fallback = toSentence(`${correctText} (with one condition altered)`);
+        if (!unique.some(u => norm(u) === norm(fallback)) && norm(fallback) !== norm(correctText)) unique.push(fallback);
+        else break;
+      }
+      return unique.slice(0, 3);
+    }
+
+    for (const q of bank) {
+      if (q.type !== "multiple_choice") continue;
+      const correct = q.options.find(o => o.correct);
+      if (!correct) continue;
+
+      const distractors = buildDistractorsFromCorrect(correct.text);
+      if (distractors.length === 3) {
+        q.options = shuffle([
+          { text: toSentence(correct.text), correct: true },
+          ...distractors.map(d => ({ text: toSentence(d), correct: false }))
+        ]);
+      } else {
+        q.options = q.options.map(o => ({ ...o, text: toSentence(o.text) }));
+      }
+    }
+    return bank;
+  }
+
+  function initSession(){
+    state.bank = sanitizeBank(hardenMultipleChoice(buildQuestionBank()));
+    if (state.bank.length < 40) {
+      throw new Error("Question pool dropped below quality threshold after cleaning.");
+    }
+    qcountChip.textContent = `Questions: ${state.bank.length}`;
+    tfChip.textContent = `True/False: ${state.bank.filter(q => q.type === "true_false").length}`;
+    state.queue = shuffle(state.bank.map(q => structuredClone(q)).map(q => {
+      if (q.options) q.options = shuffle(q.options);
+      return q;
+    }));
+    state.index = 0; state.correct = 0; state.answered = false; state.current = null; state.wrongTopics.clear();
+    renderMeta(); showQuestion();
+  }
+
+  function renderMeta(){
+    scoreChip.textContent = `Score: ${state.correct} / ${state.index}`;
+    leftChip.textContent = `Remaining: ${Math.max(0, state.queue.length - state.index)}`;
+    typeChip.textContent = `Type: ${state.current ? state.current.type : "-"}`;
+    const pct = state.queue.length ? (state.index / state.queue.length) * 100 : 0;
+    bar.style.width = `${Math.max(0, Math.min(100, pct))}%`;
+  }
+
+  function setFeedback(kind, title, details){
+    feedback.className = `feedback ${kind || ""}`;
+    feedback.innerHTML = `<strong>${title}</strong><br>${details}`;
+  }
+
+  function lockOptionButtons(){ answerArea.querySelectorAll(".opt").forEach(b => b.classList.add("locked")); }
+
+  function showQuestion(){
+    if (state.index >= state.queue.length){ showSummary(); return; }
+    state.current = state.queue[state.index];
+    state.answered = false;
+    nextBtn.disabled = true;
+    answerArea.innerHTML = "";
+    qType.textContent = state.current.type;
+    qText.textContent = state.current.question;
+    qTopic.textContent = `Topic: ${state.current.topic}`;
+    const parts = [];
+    if (state.current.snippet) parts.push(`Given: ${state.current.snippet}`);
+    if (state.current.formula) parts.push(`Formula: ${state.current.formula}`);
+    if (parts.length) { formulaBox.style.display = "block"; formulaBox.textContent = parts.join(" | "); }
+    else { formulaBox.style.display = "none"; formulaBox.textContent = ""; }
+    setFeedback("", "Choose an answer.", "You’ll get immediate feedback.");
+
+    if (["multiple_choice", "true_false"].includes(state.current.type)){
+      const wrap = document.createElement("div");
+      wrap.className = "options";
+      state.current.options.forEach((opt, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "opt";
+        btn.innerHTML = `<strong>${String.fromCharCode(65 + idx)}.</strong> ${opt.text}`;
+        btn.addEventListener("click", () => gradeSingle(idx));
+        wrap.appendChild(btn);
+      });
+      answerArea.appendChild(wrap);
+    } else if (state.current.type === "select_all"){
+      const wrap = document.createElement("div");
+      wrap.className = "options";
+      state.current.options.forEach((opt, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "opt";
+        btn.dataset.index = String(idx);
+        btn.innerHTML = `<strong>${String.fromCharCode(65 + idx)}.</strong> ${opt.text}`;
+        btn.addEventListener("click", () => btn.classList.toggle("selected"));
+        wrap.appendChild(btn);
+      });
+      const submit = document.createElement("button");
+      submit.className = "primary";
+      submit.textContent = "Submit Selection";
+      submit.style.marginTop = "10px";
+      submit.addEventListener("click", gradeSelectAll);
+      answerArea.appendChild(wrap);
+      answerArea.appendChild(submit);
+    } else if (state.current.type === "fill_blank"){
+      const row = document.createElement("div");
+      row.className = "fill-row";
+      row.innerHTML = `<input class="fill-input" id="fillInput" placeholder="Type short answer..." /> <button class="primary" id="fillSubmit">Submit</button>`;
+      answerArea.appendChild(row);
+      $("fillSubmit").addEventListener("click", gradeFill);
+      $("fillInput").addEventListener("keydown", (e) => { if (e.key === "Enter") gradeFill(); });
+    }
+    renderMeta();
+  }
+
+  function recordWrongTopic(topic){ state.wrongTopics.set(topic, (state.wrongTopics.get(topic) || 0) + 1); }
+
+  function finishQuestion(correct, custom){
+    state.answered = true;
+    nextBtn.disabled = false;
+    if (correct) {
+      state.correct += 1;
+      setFeedback("ok", "Correct", `${custom}<br>${state.current.explanation}`);
+    } else {
+      recordWrongTopic(state.current.topic);
+      const ans = state.current.type === "fill_blank"
+        ? (state.current.acceptedAnswers.join(" / "))
+        : state.current.options.map((o, i) => ({o, i})).filter(x => x.o.correct).map(x => `${String.fromCharCode(65 + x.i)}. ${x.o.text}`).join(" | ");
+      setFeedback("bad", "Incorrect", `Correct answer: ${ans}<br>${state.current.explanation}`);
+    }
+  }
+
+  function gradeSingle(chosenIndex){
+    if (state.answered) return;
+    const buttons = [...answerArea.querySelectorAll(".opt")];
+    const correctIndex = state.current.options.findIndex(o => o.correct);
+    buttons.forEach((b, i) => {
+      if (i === correctIndex) b.classList.add("correct");
+      if (i === chosenIndex && i !== correctIndex) b.classList.add("wrong");
+    });
+    lockOptionButtons();
+    finishQuestion(chosenIndex === correctIndex, "Great choice.");
+  }
+
+  function gradeSelectAll(){
+    if (state.answered) return;
+    const buttons = [...answerArea.querySelectorAll(".opt")];
+    const selected = new Set(buttons.filter(b => b.classList.contains("selected")).map(b => Number(b.dataset.index)));
+    const correctSet = new Set(state.current.options.map((o, i) => o.correct ? i : -1).filter(i => i >= 0));
+    let isCorrect = selected.size === correctSet.size;
+    if (isCorrect){ for (const i of selected){ if (!correctSet.has(i)) { isCorrect = false; break; } } }
+    buttons.forEach((b, i) => {
+      b.classList.remove("selected");
+      if (correctSet.has(i)) b.classList.add("correct");
+      if (selected.has(i) && !correctSet.has(i)) b.classList.add("wrong");
+    });
+    lockOptionButtons();
+    finishQuestion(isCorrect, "Good multi-select reasoning.");
+  }
+
+  function gradeFill(){
+    if (state.answered) return;
+    const input = $("fillInput");
+    const val = norm(input.value);
+    const ok = state.current.acceptedAnswers.includes(val);
+    input.disabled = true;
+    $("fillSubmit").disabled = true;
+    finishQuestion(ok, "Exact formula/concept recall.");
+  }
+
+  function nextQuestion(){ if (!state.answered) return; state.index += 1; showQuestion(); }
+
+  function skipQuestion(){
+    if (state.answered) return;
+    recordWrongTopic(state.current.topic);
+    setFeedback("bad", "Skipped", `Correct answer shown after skip.<br>${state.current.explanation}`);
+    if (state.current.type !== "fill_blank"){
+      const btns = [...answerArea.querySelectorAll(".opt")];
+      btns.forEach((b, i) => { if (state.current.options[i]?.correct) b.classList.add("correct"); });
+      lockOptionButtons();
+    } else {
+      const input = $("fillInput"); if (input) input.disabled = true;
+      const btn = $("fillSubmit"); if (btn) btn.disabled = true;
+    }
+    state.answered = true;
+    nextBtn.disabled = false;
+  }
+
+  function showSummary(){
+    quizView.style.display = "none";
+    summaryView.style.display = "block";
+    const total = state.queue.length;
+    const pct = total ? ((state.correct / total) * 100).toFixed(1) : "0.0";
+    $("finalScore").textContent = `Final score: ${state.correct} / ${total}`;
+    $("finalPct").textContent = `Accuracy: ${pct}%`;
+    const weak = [...state.wrongTopics.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5);
+    $("weakAreas").textContent = weak.length ? `Review focus: ${weak.map(([k]) => k).join(", ")}` : "Great work. No major weak topic detected this run.";
+  }
+
+  $("startBtn").addEventListener("click", () => {
+    startView.style.display = "none";
+    summaryView.style.display = "none";
+    quizView.style.display = "block";
+    initSession();
+  });
+  nextBtn.addEventListener("click", nextQuestion);
+  skipBtn.addEventListener("click", skipQuestion);
+  $("restartBtn").addEventListener("click", () => {
+    summaryView.style.display = "none";
+    quizView.style.display = "block";
+    initSession();
+  });
+})();
+</script>
+</body>
+</html>

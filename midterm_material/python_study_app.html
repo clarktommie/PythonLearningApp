@@ -1,0 +1,815 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Python Study Sprint</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#f4f7fb;
+      --card:#ffffff;
+      --text:#0f172a;
+      --muted:#64748b;
+      --line:#dbe5f0;
+      --primary:#0ea5a4;
+      --primary-2:#0891b2;
+      --ok:#16a34a;
+      --bad:#dc2626;
+      --shadow:0 18px 40px rgba(2, 8, 23, .12);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family:Manrope,system-ui,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1000px 380px at -10% -15%, #ccfbf1 0%, transparent 60%),
+        radial-gradient(900px 360px at 110% -15%, #dbeafe 0%, transparent 58%),
+        var(--bg);
+      display:grid;
+      place-items:center;
+      padding:18px;
+    }
+    .app{width:min(980px,100%);display:grid;gap:14px}
+    .top{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:14px;
+      box-shadow:var(--shadow);
+      padding:12px 14px;
+      display:flex;
+      justify-content:space-between;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+    .chips{display:flex;gap:8px;flex-wrap:wrap}
+    .chip{
+      background:#eef3f9;
+      border:1px solid #d7e3f1;
+      color:#334155;
+      border-radius:999px;
+      padding:6px 10px;
+      font-size:13px;
+      font-weight:700;
+    }
+    .card{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:clamp(16px,2.5vw,28px);
+    }
+    .start h1{
+      margin:0 0 8px;
+      font-size:clamp(26px,4vw,40px);
+      letter-spacing:-.02em;
+    }
+    .start p{margin:0;color:var(--muted)}
+    .start .meta{
+      margin-top:14px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+    .badge{
+      font-family:"JetBrains Mono",monospace;
+      background:#f8fafc;
+      border:1px solid #e2e8f0;
+      border-radius:9px;
+      padding:6px 8px;
+      font-size:12px;
+      color:#334155;
+    }
+    button{
+      border:none;
+      border-radius:12px;
+      font:inherit;
+      cursor:pointer;
+      transition:transform .12s ease, filter .12s ease;
+    }
+    button:active{transform:translateY(1px)}
+    .primary{
+      margin-top:16px;
+      background:linear-gradient(135deg,var(--primary),var(--primary-2));
+      color:#fff;
+      font-weight:800;
+      padding:11px 16px;
+    }
+    .quiz{display:none}
+    .qtype{
+      text-transform:uppercase;
+      letter-spacing:.09em;
+      font-size:12px;
+      font-weight:800;
+      color:#0f766e;
+    }
+    .qtext{
+      margin:8px 0 0;
+      font-size:clamp(20px,2.8vw,31px);
+      line-height:1.28;
+      letter-spacing:-.015em;
+    }
+    .qtopic{
+      margin-top:8px;
+      color:var(--muted);
+      font-size:13px;
+      font-weight:700;
+    }
+    .options{display:grid;gap:10px;margin-top:16px}
+    .opt{
+      text-align:left;
+      background:#fff;
+      border:1px solid #dce4ee;
+      border-radius:12px;
+      padding:12px 14px;
+      min-height:50px;
+      font-size:15px;
+      color:#0f172a;
+    }
+    .opt:hover{filter:brightness(.985)}
+    .opt.selected{border-color:#60a5fa;background:#eff6ff;color:#1e3a8a}
+    .opt.correct{border-color:#34d399;background:#ecfdf5;color:#065f46}
+    .opt.wrong{border-color:#fda4af;background:#fff1f2;color:#9f1239}
+    .opt.locked{pointer-events:none}
+    .fill-row{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-top:16px;
+    }
+    .fill-input{
+      flex:1;
+      min-width:220px;
+      border:1px solid #dce4ee;
+      border-radius:11px;
+      padding:11px 12px;
+      font:500 14px "JetBrains Mono",monospace;
+    }
+    .feedback{
+      margin-top:14px;
+      border:1px dashed #cbd5e1;
+      border-radius:12px;
+      background:#f8fafc;
+      padding:10px 12px;
+      font-size:14px;
+      min-height:56px;
+      color:#334155;
+    }
+    .feedback.ok{background:#ecfdf5;border-color:#86efac;color:#14532d}
+    .feedback.bad{background:#fff1f2;border-color:#fda4af;color:#881337}
+    .controls{
+      margin-top:14px;
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+    .ghost{
+      background:#edf2f8;
+      border:1px solid #d9e4f2;
+      color:#334155;
+      padding:10px 12px;
+      font-weight:700;
+    }
+    .next{
+      background:linear-gradient(135deg,var(--primary),var(--primary-2));
+      color:#fff;
+      padding:10px 14px;
+      font-weight:800;
+    }
+    .next:disabled{
+      opacity:.55;
+      cursor:not-allowed;
+    }
+    .progress{
+      margin-top:12px;
+      height:8px;
+      border-radius:999px;
+      overflow:hidden;
+      background:#e2e8f0;
+    }
+    .bar{
+      height:100%;
+      width:0%;
+      background:linear-gradient(90deg,#22c55e,#10b981);
+      transition:width .25s ease;
+    }
+    .summary{display:none}
+    .summary h2{margin:0 0 8px;font-size:30px}
+    .summary p{margin:6px 0;color:#334155}
+    .fade-in{animation:fade .22s ease}
+    @keyframes fade{
+      from{opacity:.3;transform:translateY(4px)}
+      to{opacity:1;transform:translateY(0)}
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <div class="top">
+    <div class="chips">
+      <div class="chip" id="scoreChip">Score: 0 / 0</div>
+      <div class="chip" id="leftChip">Remaining: 0</div>
+      <div class="chip" id="typeChip">Type: -</div>
+    </div>
+    <div class="chips">
+      <div class="chip" id="qcountChip">Questions: 0</div>
+      <div class="chip" id="tfChip">True/False: 0</div>
+    </div>
+  </div>
+
+  <section class="card start" id="startView">
+    <h1>Python Study Sprint</h1>
+    <p>Interactive conceptual quiz app. One question at a time, immediate feedback, randomized order.</p>
+    <div class="meta">
+      <span class="badge">100+ unique questions</span>
+      <span class="badge">MC + Select All + Fill Blank + Concept ID</span>
+      <span class="badge">True/False capped</span>
+    </div>
+    <button class="primary" id="startBtn">Start Session</button>
+  </section>
+
+  <section class="card quiz" id="quizView">
+    <div class="qtype" id="qType">multiple_choice</div>
+    <h2 class="qtext" id="qText"></h2>
+    <div class="qtopic" id="qTopic"></div>
+    <div id="answerArea"></div>
+    <div class="feedback" id="feedback">Choose an answer.</div>
+    <div class="controls">
+      <button class="ghost" id="skipBtn">Skip</button>
+      <button class="next" id="nextBtn" disabled>Next Question</button>
+    </div>
+    <div class="progress"><div class="bar" id="bar"></div></div>
+  </section>
+
+  <section class="card summary" id="summaryView">
+    <h2>Session Complete</h2>
+    <p id="finalScore"></p>
+    <p id="finalPct"></p>
+    <p id="weakAreas"></p>
+    <button class="primary" id="restartBtn">Restart</button>
+  </section>
+</div>
+
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+
+  const state = {
+    bank: [],
+    queue: [],
+    index: 0,
+    correct: 0,
+    answered: false,
+    current: null,
+    tfCount: 0,
+    wrongTopics: new Map()
+  };
+
+  const scoreChip = $("scoreChip");
+  const leftChip = $("leftChip");
+  const typeChip = $("typeChip");
+  const qcountChip = $("qcountChip");
+  const tfChip = $("tfChip");
+  const startView = $("startView");
+  const quizView = $("quizView");
+  const summaryView = $("summaryView");
+  const qType = $("qType");
+  const qText = $("qText");
+  const qTopic = $("qTopic");
+  const answerArea = $("answerArea");
+  const feedback = $("feedback");
+  const nextBtn = $("nextBtn");
+  const skipBtn = $("skipBtn");
+  const bar = $("bar");
+
+  function shuffle(arr){
+    const a=[...arr];
+    for(let i=a.length-1;i>0;i--){
+      const j=Math.floor(Math.random()*(i+1));
+      [a[i],a[j]]=[a[j],a[i]];
+    }
+    return a;
+  }
+
+  function norm(s){
+    return String(s || "")
+      .toLowerCase()
+      .normalize("NFKD")
+      .replace(/[^\p{L}\p{N}\s]/gu, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function addQuestion(bank, q){
+    bank.push({
+      id: bank.length + 1,
+      ...q
+    });
+  }
+
+  function mc(topic, question, options, correctIndex, explanation){
+    return {
+      type: "multiple_choice",
+      topic, question, explanation,
+      options: options.map((text, i) => ({ text, correct: i === correctIndex }))
+    };
+  }
+
+  function tf(topic, question, trueIsCorrect, explanation){
+    return {
+      type: "true_false",
+      topic, question, explanation,
+      options: [
+        { text: "True", correct: !!trueIsCorrect },
+        { text: "False", correct: !trueIsCorrect }
+      ]
+    };
+  }
+
+  function selectAll(topic, question, optionsWithCorrect, explanation){
+    return {
+      type: "select_all",
+      topic, question, explanation,
+      options: optionsWithCorrect
+    };
+  }
+
+  function fillBlank(topic, question, acceptedAnswers, explanation){
+    return {
+      type: "fill_blank",
+      topic, question, explanation,
+      acceptedAnswers: acceptedAnswers.map(a => norm(a))
+    };
+  }
+
+  function conceptId(topic, question, options, correctIndex, explanation){
+    return {
+      type: "concept_identification",
+      topic, question, explanation,
+      options: options.map((text, i) => ({ text, correct: i === correctIndex }))
+    };
+  }
+
+  function buildQuestionBank(){
+    const bank = [];
+
+    // ---- MULTIPLE CHOICE (primary) ----
+    [
+      ["Syntax", "What does Python use to define code blocks?", ["Curly braces {}", "Parentheses ()", "Indentation", "Semicolons"], 2, "Python uses indentation level to define block scope."],
+      ["Syntax", "Which is a valid standalone assignment statement in Python?", ["let x = 5", "x := 5", "x = 5", "var x = 5"], 2, "A standard assignment statement uses '='."],
+      ["Data Types", "Which type is immutable?", ["list", "dict", "set", "tuple"], 3, "Tuples cannot be modified after creation."],
+      ["Data Types", "What is the type of 3.0 in Python?", ["int", "float", "complex", "str"], 1, "A decimal literal is float."],
+      ["Data Types", "Which built-in type stores key-value pairs?", ["list", "set", "tuple", "dict"], 3, "Dictionary maps keys to values."],
+      ["Lists", "Which list method appends one item at the end?", ["extend()", "append()", "insert()", "add()"], 1, "append adds a single element to the end."],
+      ["Lists", "What does list slicing a[1:4] include?", ["index 1,2,3", "index 1,2,3,4", "index 2,3,4", "only index 4"], 0, "Stop index is excluded."],
+      ["Lists", "Which operation creates a shallow copy of list a?", ["a.copy()", "copy.deepcopy(a)", "a.clone()", "list.clone(a)"], 0, "a.copy() creates a shallow copy."],
+      ["Dictionaries", "What happens when accessing a missing key with d['x']?", ["Returns None", "Raises KeyError", "Creates key with None", "Returns 0"], 1, "Bracket access raises KeyError for missing keys."],
+      ["Dictionaries", "Which method safely reads a key with default?", ["fetch()", "read()", "get()", "value()"], 2, "dict.get(key, default) avoids KeyError."],
+      ["Sets", "What is a key property of set elements?", ["Ordered by insertion", "Allow duplicates", "Must be hashable and unique", "Can only be numbers"], 2, "Set stores unique hashable objects."],
+      ["Sets", "Which operator computes set intersection?", ["|", "&", "-", "^"], 1, "& returns common elements."],
+      ["Tuples", "Why might you use a tuple instead of a list?", ["Faster random access only", "Supports key lookup", "Immutability communicates fixed structure", "Allows duplicate keys"], 2, "Tuple immutability is useful for fixed records."],
+      ["Conditionals", "Which keyword handles additional condition checks after if?", ["elif", "else if", "switch", "case"], 0, "Python uses elif."],
+      ["Loops", "What does break do inside a loop?", ["Skips current iteration", "Stops the loop immediately", "Restarts loop", "Exits program"], 1, "break terminates nearest loop."],
+      ["Loops", "What does continue do inside a loop?", ["Terminates loop", "Skips to next iteration", "Repeats current iteration", "Pauses loop"], 1, "continue jumps to next iteration."],
+      ["Functions", "What does a function return if no return statement is used?", ["0", "False", "None", "Empty string"], 2, "Python returns None by default."],
+      ["Functions", "What is a benefit of keyword arguments?", ["They enforce positional order", "They improve readability and flexibility", "They are faster than positional args", "They disable defaults"], 1, "Keyword args make calls explicit and order-flexible."],
+      ["Functions", "What does *args collect?", ["Named keyword arguments", "A dictionary", "Extra positional arguments as tuple", "Only string arguments"], 2, "*args packs extra positional args into tuple."],
+      ["Functions", "What does **kwargs collect?", ["Extra positional args", "Keyword args as dict", "A tuple of keys", "Only defaults"], 1, "**kwargs packs keyword args into dict."],
+      ["Scope", "Which keyword allows assignment to a module-level variable inside a function?", ["local", "static", "global", "public"], 2, "global binds to module-level name."],
+      ["Scope", "When is nonlocal used?", ["To modify class attributes", "To modify enclosing function scope variable", "To import modules", "To declare constants"], 1, "nonlocal targets variable in nearest enclosing scope."],
+      ["OOP", "What does __init__ primarily do?", ["Destroys instance", "Formats print output", "Initializes instance state", "Defines class inheritance"], 2, "__init__ runs during instance creation."],
+      ["OOP", "What is self in instance methods?", ["Reserved global object", "Reference to current instance", "Parent class reference", "Class constructor"], 1, "self refers to the object instance."],
+      ["OOP", "What is inheritance used for?", ["Hiding methods permanently", "Reusing and extending behavior", "Compiling classes to C", "Forcing private access"], 1, "Inheritance enables reuse and specialization."],
+      ["Error Handling", "Which block runs whether an exception occurs or not?", ["except", "else", "finally", "raise"], 2, "finally always executes before leaving try statement."],
+      ["Error Handling", "What does raise do?", ["Suppresses error", "Creates warning only", "Triggers an exception", "Logs traceback silently"], 2, "raise explicitly throws an exception."],
+      ["File Handling", "What is a main benefit of using with open(...) as f?", ["Faster reads only", "Auto-closes file reliably", "Disables exceptions", "Converts text to bytes"], 1, "Context manager ensures cleanup."],
+      ["File Handling", "Which mode opens a file for appending text?", ["'r'", "'w'", "'a'", "'x'"], 2, "'a' appends at end."],
+      ["Best Practices", "Why avoid mutable default arguments in function definitions?", ["They cannot be type-annotated", "They persist state across calls unexpectedly", "They are slower than None", "They are disallowed"], 1, "Mutable defaults are evaluated once at definition time."],
+      ["Best Practices", "Which naming style is recommended for functions in Python?", ["camelCase", "PascalCase", "snake_case", "UPPER_CASE"], 2, "PEP 8 recommends snake_case for functions."],
+      ["Comprehensions", "What is a list comprehension primarily used for?", ["Declaring classes", "Creating lists concisely from iterables", "Handling exceptions", "Opening files"], 1, "Comprehensions provide compact transformation/filter patterns."],
+      ["Iterables", "What does enumerate(iterable) provide?", ["Only values", "Index-value pairs", "Sorted values", "Unique values only"], 1, "enumerate yields (index, value)." ],
+      ["Iterables", "What does zip(a, b) do?", ["Merges and sorts", "Pairs elements by position", "Flattens nested lists", "Removes duplicates"], 1, "zip combines iterables positionally."],
+      ["Strings", "Are Python strings mutable?", ["Yes, always", "Only with slicing", "No, they are immutable", "Only in Python 3"], 2, "String operations create new strings."],
+      ["Modules", "What does if __name__ == '__main__': guard?", ["Class declarations", "Code intended for script execution", "Import statements", "Docstrings"], 1, "It runs block only when file executed as script."],
+      ["NumPy", "What is a key advantage of NumPy arrays over Python lists?", ["Built-in plotting", "Vectorized numeric operations", "Automatic database storage", "Guaranteed immutability"], 1, "NumPy supports efficient vectorized operations."],
+      ["NumPy", "What does ndarray.shape represent?", ["Data type", "Memory address", "Array dimensions", "Number of bytes"], 2, "shape gives size along each axis."],
+      ["pandas", "What is a DataFrame?", ["Single scalar value", "2D labeled tabular data structure", "Only a plotting object", "JSON parser"], 1, "DataFrame is the core pandas table structure."],
+      ["pandas", "What does df.head() return?", ["Column data types", "First rows of DataFrame", "Summary stats", "Last rows"], 1, "head shows initial rows."],
+      ["pandas", "What does df.loc[...] use for indexing?", ["Integer positions only", "Boolean only", "Label-based indexing", "Regex only"], 2, ".loc is label-based."],
+      ["Matplotlib", "Which function typically creates a line chart quickly?", ["plt.bar()", "plt.scatter()", "plt.plot()", "plt.pie()"], 2, "plt.plot is standard for line plots."],
+      ["Matplotlib", "Why call plt.xlabel() and plt.ylabel()?", ["To set figure size", "To label axes for readability", "To sort data", "To save image"], 1, "Axis labels improve interpretability."],
+      ["Testing", "What is the goal of unit tests?", ["Benchmark performance only", "Validate small units of behavior", "Replace documentation", "Eliminate integration tests"], 1, "Unit tests verify focused behavior reliably."],
+      ["Readability", "What does PEP 8 primarily provide?", ["Runtime optimizer", "Style and readability guidelines", "Package installer", "Static type checker"], 1, "PEP 8 defines Python style conventions."],
+      ["Data Types", "Which value is considered falsy in Python?", ["'0'", "[0]", "1", "''"], 3, "Empty string is falsy."],
+      ["Functions", "What is a pure function conceptually?", ["Modifies globals every call", "Depends only on input and avoids side effects", "Requires class context", "Always recursive"], 1, "Pure functions improve testability and reasoning."],
+      ["OOP", "What does encapsulation emphasize?", ["Global variable use", "Bundling data and behavior with controlled access", "Multiple inheritance only", "Only private methods"], 1, "Encapsulation organizes state and methods cleanly."],
+      ["Error Handling", "When does try/else run?", ["Only on exception", "Always before try", "When no exception is raised", "Inside finally only"], 2, "else executes if try succeeds without exception."],
+      ["Files", "What does f.read() generally return in text mode?", ["list of ints", "str", "bytes", "dict"], 1, "Text mode read returns string."],
+      ["Libraries", "What is matplotlib primarily for?", ["Data manipulation", "Visualization/plotting", "HTTP requests", "Unit testing"], 1, "matplotlib is a plotting library."],
+      ["Libraries", "What is pandas primarily designed for?", ["GPU rendering", "Labelled data analysis", "Web scraping only", "Compiler tooling"], 1, "pandas focuses on data analysis/tabular operations."]
+    ].forEach(d => addQuestion(bank, mc(...d)));
+
+    // ---- SELECT ALL THAT APPLY ----
+    [
+      ["Syntax", "Select all valid Python control-flow keywords.", [
+        {text:"if", correct:true},
+        {text:"elif", correct:true},
+        {text:"switch", correct:false},
+        {text:"else", correct:true}
+      ], "if/elif/else are Python keywords; switch is not."],
+      ["Lists", "Select all operations that mutate a list in place.", [
+        {text:"append()", correct:true},
+        {text:"sort()", correct:true},
+        {text:"reversed(list_obj)", correct:false},
+        {text:"extend()", correct:true}
+      ], "append, sort, and extend mutate the list object."],
+      ["Dictionaries", "Select all true statements about dictionaries.", [
+        {text:"Keys must be hashable", correct:true},
+        {text:"Values must be unique", correct:false},
+        {text:"Insertion order is preserved in modern Python", correct:true},
+        {text:"Duplicate keys overwrite earlier values", correct:true}
+      ], "Dict keys must be hashable; duplicate keys overwrite existing entries."],
+      ["Sets", "Select all set characteristics.", [
+        {text:"Unordered collection", correct:true},
+        {text:"Allows duplicate values", correct:false},
+        {text:"Supports union and intersection", correct:true},
+        {text:"Elements must be hashable", correct:true}
+      ], "Sets are unordered unique hashable collections with set algebra operations."],
+      ["Functions", "Select all valid ways to define function parameters.", [
+        {text:"Positional-only parameters", correct:true},
+        {text:"Keyword-only parameters", correct:true},
+        {text:"Default parameter values", correct:true},
+        {text:"Type hints required for all params", correct:false}
+      ], "Python supports many parameter styles; type hints are optional."],
+      ["Error Handling", "Select all exception-handling best practices.", [
+        {text:"Catch specific exceptions when possible", correct:true},
+        {text:"Use bare except as default practice", correct:false},
+        {text:"Use finally for guaranteed cleanup", correct:true},
+        {text:"Raise meaningful custom exceptions when needed", correct:true}
+      ], "Specific handling and clear errors improve maintainability."],
+      ["File Handling", "Select all true statements about with open(...).", [
+        {text:"Automatically closes file resources", correct:true},
+        {text:"Only works in binary mode", correct:false},
+        {text:"Can be used for reading and writing", correct:true},
+        {text:"Reduces resource-leak risk", correct:true}
+      ], "Context managers handle cleanup and are mode-agnostic."],
+      ["NumPy", "Select all common NumPy use cases.", [
+        {text:"Vectorized numerical computation", correct:true},
+        {text:"Multi-dimensional arrays", correct:true},
+        {text:"Native web server framework", correct:false},
+        {text:"Linear algebra operations", correct:true}
+      ], "NumPy is for numerical arrays and math operations."],
+      ["pandas", "Select all common pandas operations.", [
+        {text:"Filtering rows by condition", correct:true},
+        {text:"Grouping and aggregating data", correct:true},
+        {text:"Compiling Python to machine code", correct:false},
+        {text:"Handling missing values", correct:true}
+      ], "pandas handles tabular transformations and analysis tasks."],
+      ["Matplotlib", "Select all typical plotting workflow steps.", [
+        {text:"Create figure/axes", correct:true},
+        {text:"Plot data", correct:true},
+        {text:"Label axes/title", correct:true},
+        {text:"Declare SQL schema", correct:false}
+      ], "Standard plotting includes setup, plotting, and annotation."]
+    ].forEach(d => addQuestion(bank, selectAll(...d)));
+
+    // ---- FILL IN THE BLANK ----
+    [
+      ["Syntax", "In Python, code blocks are defined by __________.", ["indentation"], "Indentation defines scope in Python."],
+      ["Data Types", "The built-in type used for key-value mappings is __________.", ["dict", "dictionary"], "dict stores key-value pairs."],
+      ["Lists", "The list method that adds one item at the end is __________.", ["append", "append()"], "append adds one item."],
+      ["Loops", "The keyword that exits a loop immediately is __________.", ["break"], "break stops loop execution."],
+      ["Loops", "The keyword that skips to the next loop iteration is __________.", ["continue"], "continue skips current iteration."],
+      ["Functions", "A function without an explicit return statement returns __________.", ["none"], "Python returns None implicitly."],
+      ["Scope", "The keyword used to assign to a module-level variable inside a function is __________.", ["global"], "global targets module scope."],
+      ["OOP", "The initializer method in a Python class is named __________.", ["__init__"], "__init__ initializes instance state."],
+      ["Error Handling", "The block that always executes after try/except is __________.", ["finally"], "finally runs regardless of exception."],
+      ["File Handling", "Using __________ open(path) as f: ensures automatic file closing.", ["with"], "with manages context and cleanup."],
+      ["NumPy", "NumPy arrays are represented by the type __________.", ["ndarray"], "ndarray is NumPy's core array type."],
+      ["pandas", "A two-dimensional labeled data structure in pandas is called a __________.", ["dataframe"], "DataFrame is pandas' table structure."],
+      ["Matplotlib", "The commonly used pyplot alias is __________.", ["plt"], "matplotlib.pyplot is often imported as plt."],
+      ["Best Practices", "Python style guide PEP __________ focuses on code style.", ["8", "pep 8"], "PEP 8 provides style conventions."],
+      ["Comprehensions", "A concise way to build lists from iterables is a list __________.", ["comprehension"], "List comprehensions are concise transformations."]
+    ].forEach(d => addQuestion(bank, fillBlank(...d)));
+
+    // ---- CONCEPT IDENTIFICATION ----
+    [
+      ["Concepts", "Which concept describes hiding implementation details behind a clear interface?", ["Polymorphism", "Encapsulation", "Recursion", "Duck typing"], 1, "Encapsulation hides internal details behind public methods."],
+      ["Concepts", "Which concept means a subclass can be used where a base class is expected?", ["Inheritance", "Polymorphism", "Serialization", "Memoization"], 1, "Polymorphism supports substitutability."],
+      ["Concepts", "Which concept refers to functions that avoid side effects and depend only on inputs?", ["Mutable state", "Pure functions", "Dynamic typing", "Monkey patching"], 1, "Pure functions have deterministic output and no side effects."],
+      ["Concepts", "Which concept describes handling anticipated runtime failures via try/except?", ["Exception handling", "Metaprogramming", "Garbage collection", "Bytecode compilation"], 0, "Exception handling manages runtime errors gracefully."],
+      ["Concepts", "Which concept refers to grouping related values in immutable fixed-size records?", ["set", "dict", "tuple", "list"], 2, "Tuples are immutable ordered collections."],
+      ["Concepts", "Which concept is best described as 'labeled tabular data operations'?", ["NumPy", "pandas", "asyncio", "pathlib"], 1, "pandas specializes in labeled tabular data."],
+      ["Concepts", "Which concept means combining two iterables element-by-element?", ["enumerate", "zip", "map", "filter"], 1, "zip pairs elements by index position."],
+      ["Concepts", "Which concept refers to repeatedly calling a function from within itself?", ["Vectorization", "Recursion", "Inheritance", "Broadcasting"], 1, "Recursion is self-calling function behavior."],
+      ["Concepts", "Which concept is most associated with enforcing no duplicate items?", ["set", "list", "tuple", "str"], 0, "Sets enforce uniqueness."],
+      ["Concepts", "Which concept best describes PEP 8?", ["Database standard", "Code style convention", "Package manager", "Test framework"], 1, "PEP 8 defines style/readability conventions."]
+    ].forEach(d => addQuestion(bank, conceptId(...d)));
+
+    // ---- TRUE/FALSE (max 10%) ----
+    [
+      ["True/False", "Python dictionaries preserve insertion order in modern Python versions.", true, "Yes, insertion order is preserved."],
+      ["True/False", "A set can contain duplicate elements.", false, "Sets store unique elements only."],
+      ["True/False", "The expression 3 == 3.0 evaluates to True.", true, "Numeric equality compares value, not exact type."],
+      ["True/False", "The finally block executes only when an exception occurs.", false, "finally runs regardless of exception state."],
+      ["True/False", "Strings in Python are mutable.", false, "Strings are immutable."],
+      ["True/False", "list.sort() returns a new sorted list without changing original.", false, "list.sort() mutates in place and returns None."],
+      ["True/False", "pandas DataFrame can contain mixed data types across columns.", true, "Columns can have different dtypes."],
+      ["True/False", "NumPy is primarily a plotting library.", false, "NumPy is for numerical arrays/computation."]
+    ].forEach(d => addQuestion(bank, tf(...d)));
+
+    // ---- Additional generated MC to exceed 100 unique ----
+    const generated = [
+      ["Functions", "What is the purpose of a docstring?", ["Store runtime cache", "Document function/module behavior", "Create class attributes", "Define type hints"], 1, "Docstrings explain behavior and usage."],
+      ["Functions", "Which approach best improves function reusability?", ["Use globals heavily", "Keep functions small and focused", "Print inside every function", "Avoid parameters"], 1, "Small focused functions are easier to reuse/test."],
+      ["Conditionals", "Which pattern is clearest for multiple exclusive branches?", ["Nested while loops", "if/elif/else chain", "Multiple return at top only", "Global flags"], 1, "if/elif/else is explicit for mutually exclusive conditions."],
+      ["Data Structures", "When is a dictionary preferable to a list for lookup?", ["When order matters only", "When fast key-based access is needed", "When duplicates are required", "When values must be numeric"], 1, "Dict offers direct key-based lookup."],
+      ["Best Practices", "What is generally preferred for unused loop variable?", ["x", "_", "temp_unused_variable_name", "None"], 1, "Underscore indicates intentionally unused value."],
+      ["Error Handling", "Why avoid catching broad Exception without re-raising/logging context?", ["It is slower than if statements", "It can hide real bugs and reduce debuggability", "It prevents finally block", "It changes traceback format"], 1, "Overly broad catches can mask defects."],
+      ["Files", "What does opening a file in 'w' mode do if the file exists?", ["Appends data", "Raises error", "Truncates existing file", "Opens read-only"], 2, "'w' truncates and overwrites."],
+      ["Libraries", "Which library is most suitable for array broadcasting and vectorized math?", ["matplotlib", "pandas", "numpy", "pytest"], 2, "NumPy supports broadcasting and vectorized math."],
+      ["Libraries", "Which object is typically one-dimensional in pandas?", ["DataFrame", "Series", "Panel", "IndexMap"], 1, "Series is a labeled 1D array."],
+      ["OOP", "What does method overriding mean?", ["Adding new private attributes only", "Replacing inherited method behavior in subclass", "Calling super() always", "Converting class to dict"], 1, "Override customizes inherited behavior."]
+    ];
+    generated.forEach(d => addQuestion(bank, mc(...d)));
+
+    // ---- Syntax boost (extra clarity + coverage) ----
+    const syntaxBoost = [
+      ["Syntax", "Which line correctly starts a function definition?", ["func add(a, b):", "def add(a, b):", "function add(a, b):", "define add(a, b):"], 1, "Python functions start with def ...: syntax."],
+      ["Syntax", "Which symbol begins a comment in Python?", ["//", "#", "/*", "--"], 1, "Single-line comments begin with #."],
+      ["Syntax", "Which statement correctly creates a list?", ["items = (1, 2, 3)", "items = [1, 2, 3]", "items = {1, 2, 3}", "items = <1, 2, 3>"], 1, "Square brackets define lists."],
+      ["Syntax", "Which statement correctly creates a tuple with one element?", ["t = (5)", "t = [5]", "t = {5}", "t = (5,)"], 3, "A 1-item tuple needs a trailing comma."],
+      ["Syntax", "Which statement is valid dictionary syntax?", ["d = {name: 'Ava'}", "d = {'name': 'Ava'}", "d = ['name': 'Ava']", "d = ('name': 'Ava')"], 1, "Dictionary keys must be written as expressions; strings require quotes."],
+      ["Syntax", "Which keyword defines a class?", ["object", "defclass", "class", "type"], 2, "Classes are defined with the class keyword."],
+      ["Syntax", "Which is the correct conditional structure?", ["if x > 0 then:", "if (x > 0):", "if x > 0:", "if x > 0 {}"], 2, "Python conditionals use if condition: with no braces."],
+      ["Syntax", "Which loop header is valid Python?", ["for i = 0 to 4:", "for i in range(5):", "foreach i in 5:", "for (i in range(5))"], 1, "for ... in ... is Python loop syntax."],
+      ["Syntax", "How do you check equality in Python?", ["x = y", "x == y", "x === y", "x equals y"], 1, "== checks value equality."],
+      ["Syntax", "Which operator means 'not equal'?", ["<>", "!=", "~=", "!=="], 1, "Python uses != for inequality."],
+      ["Syntax", "Which line correctly imports only sqrt from math?", ["import math.sqrt", "from math import sqrt", "import sqrt from math", "use math.sqrt"], 1, "from module import name imports a specific symbol."],
+      ["Syntax", "Which line aliases numpy as np?", ["import numpy as np", "from numpy as np import *", "alias numpy np", "import np from numpy"], 0, "The standard alias form is import numpy as np."],
+      ["Syntax", "What is the correct way to write an f-string?", ["f('Value: {x}')", "'Value: {x}'f", "f'Value: {x}'", "format f'Value: x'"], 2, "Prefix the string with f and place expressions in braces."],
+      ["Syntax", "Which line creates a set with elements 1, 2, 3?", ["s = [1,2,3]", "s = (1,2,3)", "s = {1,2,3}", "s = set(1,2,3)"], 2, "Curly braces with comma-separated values create a set literal."],
+      ["Syntax", "Which statement is valid while-loop syntax?", ["while x < 10 do", "while (x < 10):", "while x < 10:", "while x < 10 {}"], 2, "Python uses while condition: syntax."],
+      ["Syntax", "Which statement correctly defines a lambda?", ["lambda x: x * 2", "lam x => x*2", "lambda(x) {x*2}", "function(x): x*2"], 0, "Python lambda syntax is lambda args: expression."],
+      ["Syntax", "Which header is correct for exception handling?", ["catch ValueError:", "except ValueError:", "rescue ValueError:", "error ValueError:"], 1, "except handles exceptions in Python."],
+      ["Syntax", "Which line raises an exception correctly?", ["throw ValueError('bad')", "raise ValueError('bad')", "except ValueError('bad')", "error ValueError('bad')"], 1, "raise is the Python keyword for throwing exceptions."],
+      ["Syntax", "Which statement is valid list comprehension syntax?", ["[x*2 for x in nums]", "[for x in nums: x*2]", "(x*2 in nums)", "{x*2 where x in nums}"], 0, "List comprehensions use [expr for item in iterable]."],
+      ["Syntax", "Which line correctly defines default parameter value?", ["def f(x=10):", "def f(x := 10):", "def f(default x=10):", "def f(x==10):"], 0, "Defaults are set with = in function signature."],
+      ["Syntax", "Which statement is correct for multi-branch conditionals?", ["if ... elseif ... else", "if ... elif ... else", "if ... else if ...", "switch ... case"], 1, "Python uses elif between if and else."],
+      ["Syntax", "Which is correct boolean operator syntax in Python?", ["x && y", "x and y", "x AND y", "and(x,y)"], 1, "Python uses and, or, and not."],
+      ["Syntax", "How is membership tested in Python?", ["contains(x, arr)", "x inside arr", "x in arr", "arr.has(x)"], 2, "The in operator checks membership."],
+      ["Syntax", "Which one correctly opens a file for reading text?", ["open('a.txt', read)", "open('a.txt', 'r')", "open('a.txt', 'read')", "read('a.txt')"], 1, "Use open(path, 'r') for reading text."],
+      ["Syntax", "Which line correctly defines a docstring in a function body?", ["# this is docs", "\"\"\"Function docs\"\"\"", "/* docs */", "<docs>"], 1, "Triple-quoted string at top of body is a docstring."],
+      ["Syntax", "Which is valid unpacking assignment?", ["a,b = [1,2]", "a|b = [1,2]", "a:b = [1,2]", "let a,b = [1,2]"], 0, "Python supports iterable unpacking with commas."],
+      ["Syntax", "Which one is valid conditional expression syntax?", ["x ? a : b", "a if x else b", "if x then a else b", "a when x else b"], 1, "Python ternary form is a if condition else b."],
+      ["Syntax", "Which line checks object identity (not value equality)?", ["x == y", "x equals y", "x is y", "id(x) == y"], 2, "is checks identity."],
+      ["Syntax", "Which line correctly creates an empty dictionary?", ["d = {}", "d = []", "d = ()", "d = set()"], 0, "{} is empty dict literal; set() is empty set."],
+      ["Syntax", "Which line correctly creates an empty set?", ["s = {}", "s = []", "s = set()", "s = ()"], 2, "Empty set must use set()."],
+      ["Syntax", "Which statement is correct for deleting a variable name?", ["remove x", "delete x", "del x", "unset x"], 2, "del removes a name binding."],
+      ["Syntax", "Which line is valid augmented assignment?", ["x plus= 1", "x += 1", "x =+ 1", "x ++"], 1, "Python supports +=, -=, *=, etc."],
+      ["Syntax", "Which keyword exits a function early with a value?", ["yield", "break", "return", "exit"], 2, "return exits a function and optionally sends back a value."],
+      ["Syntax", "Which function call gets the number of items in a list a?", ["a.length()", "len(a)", "size(a)", "count(a)"], 1, "len() returns number of elements."],
+      ["Syntax", "Which line correctly formats to two decimal places?", ["f'{x:.2f}'", "f'{x:2f.}'", "'{x:.2f}'", "format(x,'.2')"], 0, "f-string format specifier .2f gives two decimals."],
+      ["Syntax", "Which syntax creates a dictionary comprehension?", ["{k:v for k,v in pairs}", "[k:v for k,v in pairs]", "(k:v for k,v in pairs)", "{for k,v in pairs: k:v}"], 0, "Dict comprehensions use braces with key:value expression."],
+      ["Syntax", "Which statement is valid chained comparison syntax?", ["0 < x < 10", "0 < x && x < 10", "0 < x and < 10", "between(0, x, 10)"], 0, "Python supports chained comparisons directly."]
+    ];
+    syntaxBoost.forEach(d => addQuestion(bank, mc(...d)));
+
+    // Ensure >= 100 and TF <= 10%
+    const tfCount = bank.filter(q => q.type === "true_false").length;
+    if (bank.length < 100) throw new Error("Question bank must be at least 100.");
+    if (tfCount > Math.floor(bank.length * 0.1)) throw new Error("True/False exceeds 10%.");
+
+    return bank;
+  }
+
+  function initSession(){
+    state.bank = buildQuestionBank();
+    qcountChip.textContent = `Questions: ${state.bank.length}`;
+    tfChip.textContent = `True/False: ${state.bank.filter(q => q.type === "true_false").length}`;
+    state.queue = shuffle(state.bank.map(q => structuredClone(q)).map(q => {
+      if (q.options) q.options = shuffle(q.options);
+      return q;
+    }));
+    state.index = 0;
+    state.correct = 0;
+    state.answered = false;
+    state.current = null;
+    state.wrongTopics.clear();
+    renderMeta();
+    showQuestion();
+  }
+
+  function renderMeta(){
+    scoreChip.textContent = `Score: ${state.correct} / ${state.index}`;
+    leftChip.textContent = `Remaining: ${Math.max(0, state.queue.length - state.index)}`;
+    typeChip.textContent = `Type: ${state.current ? state.current.type : "-"}`;
+    const pct = state.queue.length ? (state.index / state.queue.length) * 100 : 0;
+    bar.style.width = `${Math.max(0, Math.min(100, pct))}%`;
+  }
+
+  function setFeedback(kind, title, details){
+    feedback.className = `feedback ${kind || ""}`;
+    feedback.innerHTML = `<strong>${title}</strong><br>${details}`;
+  }
+
+  function lockOptionButtons(){
+    answerArea.querySelectorAll(".opt").forEach(b => b.classList.add("locked"));
+  }
+
+  function showQuestion(){
+    if (state.index >= state.queue.length){
+      showSummary();
+      return;
+    }
+
+    state.current = state.queue[state.index];
+    state.answered = false;
+    nextBtn.disabled = true;
+    answerArea.innerHTML = "";
+    qType.textContent = state.current.type;
+    qText.textContent = state.current.question;
+    qTopic.textContent = `Topic: ${state.current.topic}`;
+    setFeedback("", "Choose an answer.", "You’ll get immediate feedback.");
+    quizView.classList.add("fade-in");
+    setTimeout(() => quizView.classList.remove("fade-in"), 230);
+
+    if (["multiple_choice", "concept_identification", "true_false"].includes(state.current.type)){
+      const wrap = document.createElement("div");
+      wrap.className = "options";
+      state.current.options.forEach((opt, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "opt";
+        btn.innerHTML = `<strong>${String.fromCharCode(65 + idx)}.</strong> ${opt.text}`;
+        btn.addEventListener("click", () => gradeSingle(idx));
+        wrap.appendChild(btn);
+      });
+      answerArea.appendChild(wrap);
+    } else if (state.current.type === "select_all"){
+      const wrap = document.createElement("div");
+      wrap.className = "options";
+      state.current.options.forEach((opt, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "opt";
+        btn.dataset.index = String(idx);
+        btn.innerHTML = `<strong>${String.fromCharCode(65 + idx)}.</strong> ${opt.text}`;
+        btn.addEventListener("click", () => btn.classList.toggle("selected"));
+        wrap.appendChild(btn);
+      });
+      const submit = document.createElement("button");
+      submit.className = "primary";
+      submit.textContent = "Submit Selection";
+      submit.style.marginTop = "10px";
+      submit.addEventListener("click", gradeSelectAll);
+      answerArea.appendChild(wrap);
+      answerArea.appendChild(submit);
+    } else if (state.current.type === "fill_blank"){
+      const row = document.createElement("div");
+      row.className = "fill-row";
+      row.innerHTML = `
+        <input class="fill-input" id="fillInput" placeholder="Type short answer..." />
+        <button class="primary" id="fillSubmit">Submit</button>
+      `;
+      answerArea.appendChild(row);
+      $("fillSubmit").addEventListener("click", gradeFill);
+      $("fillInput").addEventListener("keydown", (e) => {
+        if (e.key === "Enter") gradeFill();
+      });
+    }
+
+    renderMeta();
+  }
+
+  function recordWrongTopic(topic){
+    state.wrongTopics.set(topic, (state.wrongTopics.get(topic) || 0) + 1);
+  }
+
+  function finishQuestion(correct, custom){
+    state.answered = true;
+    nextBtn.disabled = false;
+    if (correct) {
+      state.correct += 1;
+      setFeedback("ok", "Correct", `${custom}<br>${state.current.explanation}`);
+    } else {
+      recordWrongTopic(state.current.topic);
+      const ans = state.current.type === "fill_blank"
+        ? (state.current.acceptedAnswers.map(x => x).join(" / "))
+        : state.current.options
+            .map((o, i) => ({o, i}))
+            .filter(x => x.o.correct)
+            .map(x => `${String.fromCharCode(65 + x.i)}. ${x.o.text}`)
+            .join(" | ");
+      setFeedback("bad", "Incorrect", `Correct answer: ${ans}<br>${state.current.explanation}`);
+    }
+  }
+
+  function gradeSingle(chosenIndex){
+    if (state.answered) return;
+    const buttons = [...answerArea.querySelectorAll(".opt")];
+    const correctIndex = state.current.options.findIndex(o => o.correct);
+    buttons.forEach((b, i) => {
+      if (i === correctIndex) b.classList.add("correct");
+      if (i === chosenIndex && i !== correctIndex) b.classList.add("wrong");
+    });
+    lockOptionButtons();
+    finishQuestion(chosenIndex === correctIndex, "Great choice.");
+  }
+
+  function gradeSelectAll(){
+    if (state.answered) return;
+    const buttons = [...answerArea.querySelectorAll(".opt")];
+    const selected = new Set(buttons.filter(b => b.classList.contains("selected")).map(b => Number(b.dataset.index)));
+    const correctSet = new Set(state.current.options.map((o, i) => o.correct ? i : -1).filter(i => i >= 0));
+
+    let isCorrect = selected.size === correctSet.size;
+    if (isCorrect){
+      for (const i of selected){
+        if (!correctSet.has(i)) { isCorrect = false; break; }
+      }
+    }
+
+    buttons.forEach((b, i) => {
+      b.classList.remove("selected");
+      if (correctSet.has(i)) b.classList.add("correct");
+      if (selected.has(i) && !correctSet.has(i)) b.classList.add("wrong");
+    });
+    lockOptionButtons();
+    finishQuestion(isCorrect, "Good multi-select reasoning.");
+  }
+
+  function gradeFill(){
+    if (state.answered) return;
+    const input = $("fillInput");
+    const val = norm(input.value);
+    const ok = state.current.acceptedAnswers.includes(val);
+    input.disabled = true;
+    $("fillSubmit").disabled = true;
+    finishQuestion(ok, "Exact concept recall.");
+  }
+
+  function nextQuestion(){
+    if (!state.answered) return;
+    state.index += 1;
+    showQuestion();
+  }
+
+  function skipQuestion(){
+    if (state.answered) return;
+    recordWrongTopic(state.current.topic);
+    setFeedback("bad", "Skipped", `Correct answer shown after skip.<br>${state.current.explanation}`);
+    if (state.current.type !== "fill_blank"){
+      const btns = [...answerArea.querySelectorAll(".opt")];
+      btns.forEach((b, i) => {
+        if (state.current.options[i]?.correct) b.classList.add("correct");
+      });
+      lockOptionButtons();
+    } else {
+      const input = $("fillInput");
+      if (input) input.disabled = true;
+      const btn = $("fillSubmit");
+      if (btn) btn.disabled = true;
+    }
+    state.answered = true;
+    nextBtn.disabled = false;
+  }
+
+  function showSummary(){
+    quizView.style.display = "none";
+    summaryView.style.display = "block";
+    const total = state.queue.length;
+    const pct = total ? ((state.correct / total) * 100).toFixed(1) : "0.0";
+    $("finalScore").textContent = `Final score: ${state.correct} / ${total}`;
+    $("finalPct").textContent = `Accuracy: ${pct}%`;
+
+    const weak = [...state.wrongTopics.entries()]
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 4);
+
+    $("weakAreas").textContent = weak.length
+      ? `Review focus: ${weak.map(([k]) => k).join(", ")}`
+      : "Great work. No major weak topic detected this run.";
+  }
+
+  $("startBtn").addEventListener("click", () => {
+    startView.style.display = "none";
+    summaryView.style.display = "none";
+    quizView.style.display = "block";
+    initSession();
+  });
+
+  nextBtn.addEventListener("click", nextQuestion);
+  skipBtn.addEventListener("click", skipQuestion);
+  $("restartBtn").addEventListener("click", () => {
+    summaryView.style.display = "none";
+    quizView.style.display = "block";
+    initSession();
+  });
+})();
+</script>
+</body>
+</html>

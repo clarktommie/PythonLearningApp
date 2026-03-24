@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Midterm Study App</title>
+<style>
+body {font-family: Arial; background:#f5f6fa; display:flex; justify-content:center;}
+.card {background:white; padding:20px; margin-top:40px; width:700px; border-radius:10px;}
+button {padding:10px; margin:5px; width:100%;}
+.correct {background:#2ecc71;}
+.wrong {background:#e74c3c;}
+</style>
+</head>
+<body>
+
+<div class="card">
+<h2 id="question"></h2>
+<div id="answers"></div>
+<p id="feedback"></p>
+<button onclick="nextQuestion()">Next</button>
+</div>
+
+<script>
+
+const questions = [
+{
+q: "Scenario 1: A study involving covariance vs correlation. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 2: A study involving multivariate normal. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 3: A study involving independence. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 4: A study involving Hotelling T2. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 5: A study involving Bonferroni. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 6: A study involving confidence regions. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 7: A study involving linear combination. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 8: A study involving regression interpretation. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 9: A study involving ANOVA. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 10: A study involving model assumptions. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 11: A study involving covariance vs correlation. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 12: A study involving multivariate normal. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 13: A study involving independence. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 14: A study involving Hotelling T2. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 15: A study involving Bonferroni. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 16: A study involving confidence regions. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 17: A study involving linear combination. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 18: A study involving regression interpretation. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 19: A study involving ANOVA. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 20: A study involving model assumptions. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 21: A study involving covariance vs correlation. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 22: A study involving multivariate normal. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 23: A study involving independence. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 24: A study involving Hotelling T2. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 25: A study involving Bonferroni. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 26: A study involving confidence regions. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 27: A study involving linear combination. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 28: A study involving regression interpretation. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 29: A study involving ANOVA. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 30: A study involving model assumptions. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 31: A study involving covariance vs correlation. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 32: A study involving multivariate normal. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 33: A study involving independence. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 34: A study involving Hotelling T2. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 35: A study involving Bonferroni. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 36: A study involving confidence regions. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 37: A study involving linear combination. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 38: A study involving regression interpretation. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 39: A study involving ANOVA. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 40: A study involving model assumptions. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 41: A study involving covariance vs correlation. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 42: A study involving multivariate normal. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 43: A study involving independence. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 44: A study involving Hotelling T2. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 45: A study involving Bonferroni. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 46: A study involving confidence regions. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 47: A study involving linear combination. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 48: A study involving regression interpretation. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 49: A study involving ANOVA. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 50: A study involving model assumptions. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 51: A study involving covariance vs correlation. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 52: A study involving multivariate normal. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 53: A study involving independence. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 54: A study involving Hotelling T2. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 55: A study involving Bonferroni. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 56: A study involving confidence regions. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 57: A study involving linear combination. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 58: A study involving regression interpretation. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 59: A study involving ANOVA. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 60: A study involving model assumptions. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 61: A study involving covariance vs correlation. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 62: A study involving multivariate normal. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 63: A study involving independence. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 64: A study involving Hotelling T2. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 65: A study involving Bonferroni. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 66: A study involving confidence regions. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 67: A study involving linear combination. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 68: A study involving regression interpretation. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 69: A study involving ANOVA. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 70: A study involving model assumptions. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 71: A study involving covariance vs correlation. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 72: A study involving multivariate normal. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 73: A study involving independence. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 74: A study involving Hotelling T2. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 75: A study involving Bonferroni. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 76: A study involving confidence regions. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 77: A study involving linear combination. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 78: A study involving regression interpretation. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 79: A study involving ANOVA. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 80: A study involving model assumptions. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 81: A study involving covariance vs correlation. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 82: A study involving multivariate normal. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 83: A study involving independence. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 84: A study involving Hotelling T2. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 85: A study involving Bonferroni. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 86: A study involving confidence regions. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 87: A study involving linear combination. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 88: A study involving regression interpretation. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 89: A study involving ANOVA. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 90: A study involving model assumptions. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 91: A study involving covariance vs correlation. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 92: A study involving multivariate normal. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 93: A study involving independence. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 94: A study involving Hotelling T2. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 95: A study involving Bonferroni. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 96: A study involving confidence regions. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 97: A study involving linear combination. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 98: A study involving regression interpretation. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 99: A study involving ANOVA. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 100: A study involving model assumptions. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 101: A study involving covariance vs correlation. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 102: A study involving multivariate normal. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 103: A study involving independence. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 104: A study involving Hotelling T2. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 105: A study involving Bonferroni. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 106: A study involving confidence regions. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 107: A study involving linear combination. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 108: A study involving regression interpretation. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 109: A study involving ANOVA. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 110: A study involving model assumptions. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 111: A study involving covariance vs correlation. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 112: A study involving multivariate normal. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 113: A study involving independence. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 114: A study involving Hotelling T2. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 115: A study involving Bonferroni. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 116: A study involving confidence regions. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 117: A study involving linear combination. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 118: A study involving regression interpretation. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 119: A study involving ANOVA. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+{
+q: "Scenario 120: A study involving model assumptions. What is the most accurate interpretation?",
+a: [
+"The conclusion is based only on variance",
+"The conclusion depends on joint relationships between variables",
+"The variables must be independent in all cases",
+"The result is determined only by sample size"
+],
+c: 1
+},
+
+];
+
+let current = 0;
+
+function loadQuestion() {
+let q = questions[current];
+document.getElementById("question").innerText = q.q;
+let answersDiv = document.getElementById("answers");
+answersDiv.innerHTML = "";
+
+q.a.forEach((ans, i) => {
+let btn = document.createElement("button");
+btn.innerText = ans;
+btn.onclick = () => checkAnswer(i);
+answersDiv.appendChild(btn);
+});
+
+document.getElementById("feedback").innerText = "";
+}
+
+function checkAnswer(i) {
+let correct = questions[current].c;
+let feedback = document.getElementById("feedback");
+
+if (i === correct) {
+feedback.innerText = "Correct";
+} else {
+feedback.innerText = "Incorrect";
+}
+}
+
+function nextQuestion() {
+current = (current + 1) % questions.length;
+loadQuestion();
+}
+
+loadQuestion();
+
+</script>
+</body>
+</html>

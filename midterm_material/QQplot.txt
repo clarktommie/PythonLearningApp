@@ -1,0 +1,43 @@
+    title 'Example: Q-Q plot';
+    data C;
+    input x1 x2 x3 x4 d;
+     
+    datalines;
+
+
+
+
+    run;
+
+proc princomp std out=pcresult;
+var x1 x2 x3 x4;
+run;
+
+
+data mahal;
+set pcresult;
+dist2=uss(of prin1-prin4);
+run;
+
+
+proc print;
+var dist2;
+run;
+
+
+proc sort;
+by dist2;
+run;
+
+
+data plotdata;
+set mahal;
+prb=(_n_ -.5)/30;
+chiquant=cinv(prb,4);
+run;
+
+
+proc gplot;
+plot dist2*chiquant;
+run;
+quit;

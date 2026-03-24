@@ -1,0 +1,166 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Study App</title>
+<style>
+body { font-family: Arial; background:#f5f6fa; display:flex; justify-content:center; }
+.card { background:white; padding:20px; margin-top:50px; width:700px; border-radius:10px; }
+button { padding:10px; margin:5px; width:100%; }
+.correct { background:#2ecc71; }
+.wrong { background:#e74c3c; }
+</style>
+</head>
+<body>
+
+<div class="card">
+<h3 id="qtype">MULTIPLE CHOICE</h3>
+<h2 id="question"></h2>
+<div id="answers"></div>
+<p id="feedback"></p>
+<button onclick="nextQuestion()">Next</button>
+</div>
+
+<script>
+
+const questions = [
+{
+q: "A researcher studies two variables with zero covariance. What can be concluded?",
+a: [
+"Variables must be independent",
+"Variables are uncorrelated but may still be dependent",
+"Variables must follow a normal distribution",
+"Variables must have equal variance"
+],
+c: 1
+},
+{
+q: "In a multivariate normal setting, when are two variables independent?",
+a: [
+"When their variances are equal",
+"When their covariance is zero",
+"When their means are equal",
+"When their correlation is positive"
+],
+c: 1
+},
+{
+q: "A confidence region is compared to individual confidence intervals. What is true?",
+a: [
+"Confidence regions ignore correlation",
+"Confidence regions account for joint variability",
+"Confidence regions are always narrower",
+"Confidence regions only apply to one variable"
+],
+c: 1
+},
+{
+q: "A Bonferroni adjustment is used when:",
+a: [
+"Estimating a single parameter",
+"Reducing bias in regression",
+"Controlling family-wise error across multiple comparisons",
+"Increasing sample size"
+],
+c: 2
+},
+{
+q: "Which adjustment is closest to Bonferroni for two parameters?",
+a: [
+"α/2",
+"α/(2m)",
+"α/m",
+"α/(m−1)"
+],
+c: 1
+},
+{
+q: "In regression, a coefficient represents:",
+a: [
+"The variance of Y",
+"The expected change in Y for a one-unit change in X holding others fixed",
+"The correlation between X and Y",
+"The total error in the model"
+],
+c: 1
+},
+{
+q: "Hotelling’s T² is best described as:",
+a: [
+"A univariate t-test",
+"A multivariate test for mean vectors",
+"A variance estimator",
+"A regression diagnostic"
+],
+c: 1
+},
+{
+q: "If covariance is high but correlation is low, this suggests:",
+a: [
+"Variables are identical",
+"Scale differences affect interpretation",
+"Variables are independent",
+"Variance is zero"
+],
+c: 1
+},
+{
+q: "A linear combination a'X represents:",
+a: [
+"A nonlinear transformation",
+"A weighted sum of variables",
+"A covariance matrix",
+"A regression residual"
+],
+c: 1
+},
+{
+q: "ANOVA primarily tests:",
+a: [
+"Individual coefficients",
+"Overall model significance",
+"Data normality",
+"Variance equality only"
+],
+c: 1
+}
+];
+
+let current = 0;
+
+function loadQuestion() {
+let q = questions[current];
+document.getElementById("question").innerText = q.q;
+let answersDiv = document.getElementById("answers");
+answersDiv.innerHTML = "";
+q.a.forEach((ans, i) => {
+let btn = document.createElement("button");
+btn.innerText = ans;
+btn.onclick = () => checkAnswer(i);
+answersDiv.appendChild(btn);
+});
+document.getElementById("feedback").innerText = "";
+}
+
+function checkAnswer(i) {
+let correct = questions[current].c;
+let feedback = document.getElementById("feedback");
+if (i === correct) {
+feedback.innerText = "Correct";
+} else {
+feedback.innerText = "Incorrect";
+}
+}
+
+function nextQuestion() {
+current = (current + 1) % questions.length;
+loadQuestion();
+}
+
+loadQuestion();
+
+</script>
+
+</body>
+</html>

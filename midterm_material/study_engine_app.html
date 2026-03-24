@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Study Sprint</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <style>
+    :root { --bg:#f6f8fb; --card:#fff; --ink:#0f172a; --muted:#64748b; --line:#e2e8f0; --brand:#0ea5a4; --brand-2:#14b8a6; --ok:#16a34a; --bad:#dc2626; --shadow:0 16px 42px rgba(15,23,42,.08); --radius:18px; }
+    *{box-sizing:border-box} body{margin:0;font-family:"Space Grotesk",sans-serif;background:radial-gradient(1200px 400px at -10% -20%,#ccfbf1 0%,transparent 60%),radial-gradient(900px 300px at 110% -20%,#dbeafe 0%,transparent 60%),var(--bg);color:var(--ink);min-height:100vh;display:grid;place-items:center;padding:20px}
+    .app{width:min(980px,100%);display:grid;gap:16px}.topbar{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between;background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:12px 16px}
+    .chips{display:flex;gap:8px;flex-wrap:wrap}.chip{background:#f1f5f9;border:1px solid #e2e8f0;border-radius:999px;padding:6px 10px;font-size:13px;color:#334155}
+    .mode-group{display:flex;gap:6px;flex-wrap:wrap}.mode-btn{border:1px solid var(--line);background:#fff;color:#334155;border-radius:999px;padding:6px 10px;cursor:pointer;font-family:inherit;font-size:12px}
+    .mode-btn.active{background:#e0f2fe;border-color:#7dd3fc;color:#0c4a6e;font-weight:700}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:clamp(16px,3vw,28px)}
+    .setup h1{margin:0 0 8px;font-size:clamp(22px,2.8vw,34px);letter-spacing:-.02em}.setup p{margin:0 0 14px;color:var(--muted)}
+    textarea{width:100%;min-height:220px;resize:vertical;border:1px solid var(--line);border-radius:12px;padding:12px;font-family:"IBM Plex Mono",monospace;font-size:13px;line-height:1.55;outline:none;background:#fcfdff}
+    textarea:focus{border-color:#7dd3fc;box-shadow:0 0 0 4px rgba(14,165,164,.12)}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    button{border:none;border-radius:12px;padding:11px 14px;font-family:inherit;font-size:14px;cursor:pointer;transition:transform .12s ease,filter .12s ease} button:active{transform:translateY(1px)}
+    .primary{background:linear-gradient(135deg,var(--brand),var(--brand-2));color:#fff;font-weight:700}.ghost{background:#eef2f7;color:#334155;border:1px solid #dbe3ee}
+    .quiz{display:none}.qhead{display:grid;gap:8px;margin-bottom:12px}.qtype{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#0f766e;font-weight:700}.qtext{font-size:clamp(18px,2.6vw,28px);line-height:1.28;margin:0}
+    .options{display:grid;gap:10px;margin-top:14px}.option{text-align:left;border:1px solid var(--line);background:#fff;color:#0f172a;border-radius:12px;padding:12px 14px;font-size:15px;min-height:48px}
+    .option:hover{filter:brightness(.985)}.option.selected{border-color:#38bdf8;background:#eff6ff;color:#0c4a6e}.option.correct{border-color:#22c55e;background:#f0fdf4;color:#14532d}.option.wrong{border-color:#f43f5e;background:#fff1f2;color:#881337}.option.locked{pointer-events:none}
+    .flash-wrap{perspective:1000px;margin-top:10px}.flash{height:180px;position:relative;transform-style:preserve-3d;transition:transform .6s ease;cursor:pointer}.flash.flipped{transform:rotateY(180deg)}
+    .flash-face{position:absolute;inset:0;border:1px solid var(--line);border-radius:14px;display:grid;place-items:center;padding:16px;backface-visibility:hidden;background:#fff;text-align:center;font-size:17px}.flash-back{transform:rotateY(180deg);background:#f8fafc}
+    .mono{font-family:"IBM Plex Mono",monospace}.fill-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}.fill-input{flex:1;min-width:200px;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:14px;font-family:"IBM Plex Mono",monospace}
+    .feedback{margin-top:14px;border-radius:12px;border:1px dashed #cbd5e1;background:#f8fafc;padding:10px 12px;font-size:14px;min-height:48px;display:grid;align-content:center;gap:4px}
+    .feedback.ok{border-color:#86efac;background:#f0fdf4;color:#14532d}.feedback.bad{border-color:#fda4af;background:#fff1f2;color:#881337}
+    .controls{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}.progress{height:8px;background:#e2e8f0;border-radius:999px;overflow:hidden;margin-top:12px}.bar{height:100%;width:0%;background:linear-gradient(90deg,#06b6d4,#0ea5a4);transition:width .25s ease}
+    @media (max-width:680px){.qtext{font-size:20px}.flash{height:160px}}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="topbar">
+      <div class="chips">
+        <div class="chip" id="scoreChip">Correct: 0 | Incorrect: 0</div>
+        <div class="chip" id="streakChip">Streak: 0</div>
+        <div class="chip" id="poolChip">Concepts: 0</div>
+      </div>
+      <div class="mode-group">
+        <button class="mode-btn active" data-mode="normal">Normal</button>
+        <button class="mode-btn" data-mode="rapid fire">Rapid Fire</button>
+        <button class="mode-btn" data-mode="exam mode">Exam Mode</button>
+        <button class="mode-btn" data-mode="review mode">Review Mode</button>
+      </div>
+    </div>
+    <section class="card setup" id="setupCard">
+      <h1>Study Sprint</h1>
+      <p>Loading your local midterm material automatically...</p>
+      <textarea id="guideInput">Linear Regression: models the relationship between a response variable and one or more predictors.
+Assumption: Linearity means the expected value of Y is a linear function of X.
+Assumption: Homoscedasticity means constant variance of errors across X.
+Assumption: Errors are independent.
+Formula: $y = \beta_0 + \beta_1 x + \varepsilon$
+$\beta_1$: expected change in Y for a one-unit increase in X.
+$R^2$: proportion of variance in Y explained by the model.</textarea>
+      <div class="actions"><button class="primary" id="startBtn">Start (Fallback)</button></div>
+    </section>
+    <section class="card quiz" id="quizCard">
+      <div class="qhead"><div class="qtype" id="qType">Multiple Choice</div><h2 class="qtext" id="qText"></h2></div>
+      <div id="dynamicZone"></div>
+      <div class="feedback" id="feedback">Pick an answer to continue.</div>
+      <div class="controls"><button class="ghost" id="hintBtn">Hint</button><button class="ghost" id="skipBtn">Skip</button><button class="primary" id="nextBtn" disabled>Next Question</button></div>
+      <div class="progress"><div class="bar" id="bar"></div></div>
+    </section>
+  </div>
+  <script>
+    const state = { concepts: [], mode: "normal", asked: 0, correct: 0, incorrect: 0, streak: 0, missed: [], stats: new Map(), current: null, answered: false, recentConcepts: [], recentKeys: [], recentTypes: [], queue: [], retryQueue: [] };
+    const $ = (id) => document.getElementById(id);
+    const setupCard = $("setupCard"), quizCard = $("quizCard"), guideInput = $("guideInput"), qType = $("qType"), qText = $("qText"), dynamicZone = $("dynamicZone"), feedback = $("feedback"), nextBtn = $("nextBtn"), hintBtn = $("hintBtn"), skipBtn = $("skipBtn"), scoreChip = $("scoreChip"), streakChip = $("streakChip"), poolChip = $("poolChip"), bar = $("bar");
+    function shuffle(a){const arr=[...a];for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]]}return arr}
+    function pick(a){return a[Math.floor(Math.random()*a.length)]}
+    function n(s){return String(s||"").toLowerCase().normalize("NFKD").replace(/[^\p{L}\p{N}\s]/gu," ").replace(/\s+/g," ").trim()}
+    function overlap(a,b){const A=new Set(n(a).split(" ").filter(Boolean));const B=new Set(n(b).split(" ").filter(Boolean));if(!A.size||!B.size)return 0;let h=0;A.forEach(t=>{if(B.has(t))h++});return h/B.size}
+    function tokens(s){const stop=new Set(["the","and","for","with","from","that","this","are","was","were","into","between","about","then","than","where","when","using","used","have","has","had","not","one","two","three","four","five","your","notes","line","data","example","let","if","and","or"]);return n(s).split(" ").filter(w=>w.length>2&&!stop.has(w))}
+    function makeCompleteDefinition(term, def){
+      let d = String(def||"").replace(/\s+/g," ").trim();
+      if(!d) return "";
+      d = d.replace(/^[-:;,\s]+/,"").replace(/[-:;,\s]+$/,"");
+      const hasVerb = /\b(is|are|means|refers|represents|describes|indicates|implies|equals|has|have)\b/i.test(d);
+      if(!hasVerb) d = `${term} is ${d}`;
+      if(!/[.!?]$/.test(d)) d += ".";
+      return d;
+    }
+    function isConceptQualityOK(c){
+      if(!c||!c.term||!c.def)return false;
+      const term=String(c.term).trim(), def=String(c.def).trim();
+      if(term.length<3||term.length>60) return false;
+      if(def.length<25||def.length>220) return false;
+      const badTerms=new Set(["example","data","let","if","and","stat","lecture","max","min","gsv","information","consider"]);
+      if(badTerms.has(term.toLowerCase())) return false;
+      if((term.match(/\b(example|lecture|code|find|hint)\b/i))) return false;
+      if((def.match(/\b(code for|find the|use sas|question|example|histograms?)\b/i))) return false;
+      if(def.includes("...")||def.includes(" . . . ")) return false;
+      if((def.match(/[A-Za-z]/g)||[]).length<18) return false;
+      if((def.match(/\b\w+\b/g)||[]).length<6) return false;
+      if(/\b(of|to|for|with|by|and|or|if|then)\.?$/i.test(def)) return false;
+      if(!/\b(is|are|means|refers|represents|describes|indicates|implies|equals|has|have)\b/i.test(def)) return false;
+      const symbolCount=(def.match(/[^A-Za-z0-9\s\.,:;_\-\+\*\/\(\)=]/g)||[]).length;
+      if(symbolCount>10&&!def.includes("=")) return false;
+      return true;
+    }
+    function similarConcepts(base, all, limit=8){
+      const bt=new Set(tokens(base.term+" "+base.def));
+      const scored=all.filter(c=>c.cid!==base.cid).map(c=>{
+        const ct=new Set(tokens(c.term+" "+c.def));
+        let inter=0; for(const t of bt){if(ct.has(t))inter++;}
+        const score=inter + (Math.abs(c.def.length-base.def.length)<40?0.5:0);
+        return {c,score};
+      }).filter(x=>x.score>0).sort((a,b)=>b.score-a.score);
+      return scored.slice(0,limit).map(x=>x.c);
+    }
+    function updateChips(){scoreChip.textContent=`Correct: ${state.correct} | Incorrect: ${state.incorrect}`;streakChip.textContent=`Streak: ${state.streak}`;poolChip.textContent=`Concepts: ${state.concepts.length}`;const total=Math.max(1,state.asked);bar.style.width=`${Math.min(100,Math.max(4,(state.correct/total)*100))}%`}
+    function parseGuide(raw){const lines=raw.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);const concepts=[];const seen=new Set();let cid=0;for(const line of lines){if(line.length<6)continue;let term="",def=line;if(line.includes(":")){const [l,...r]=line.split(":");term=l.trim();def=r.join(":").trim()}else if(line.includes(" - ")){const [l,...r]=line.split(" - ");term=l.trim();def=r.join(" - ").trim()}else if(line.includes("=")){const [l]=line.split("=");term=l.trim();def=line.trim()}if(!term||term.split(/\s+/).length>8)continue;const key=n(term+"|"+def);if(seen.has(key))continue;seen.add(key);const formula=/\$[^$]+\$|=/.test(line)?line:null;concepts.push({cid:cid++,term,def,formula,hint:`Focus on "${term}" and its exact note wording.`})}return concepts}
+    function refillQueue(){
+      state.queue = shuffle([...state.concepts]);
+    }
+    function chooseConcept(){
+      if(state.retryQueue.length && state.asked % 4 === 0){
+        const cid = state.retryQueue.shift();
+        const found = state.concepts.find(c => c.cid === cid);
+        if(found) return found;
+      }
+      if(!state.queue.length) refillQueue();
+      return state.queue.shift();
+    }
+    function difficulty(){if(state.mode==="rapid fire")return"easy";if(state.mode==="exam mode")return"hard";if(state.mode==="review mode")return"medium";if(state.asked<5)return"easy";if(state.asked<15)return"medium";return(state.correct/Math.max(1,state.asked))>0.72?"hard":"medium"}
+    function chooseType(){ return "multiple_choice"; }
+    function validateQuestionObject(q){
+      if(!q||typeof q!=="object")return false;
+      if(!["multiple_choice","select_all","fill_blank","concept_identification"].includes(q.type))return false;
+      if(!q.question||typeof q.question!=="string")return false;
+      if(!Array.isArray(q.options)||q.options.length<2)return false;
+      const texts=q.options.map(o=>n(o.text));
+      if(new Set(texts).size!==texts.length)return false;
+      const correctCount=q.options.filter(o=>o.correct===true).length;
+      if(q.type==="select_all")return correctCount>=1;
+      if(q.type==="fill_blank")return correctCount===1;
+      return q.options.length===4&&correctCount===1;
+    }
+    function uniqueQuestion(buildFn){
+      for(let i=0;i<30;i++){
+        const q=buildFn();
+        const key=`${q.type}|${q.question}|${(q.options||[]).map(o=>o.text).join("|")}`;
+        if(state.recentKeys.includes(key))continue;
+        if(!validateQuestionObject(q))continue;
+        state.recentKeys.push(key);if(state.recentKeys.length>120)state.recentKeys.shift();
+        return q;
+      }
+      return buildFn();
+    }
+    function makeQuestion(){const t=chooseType();const c=chooseConcept();const defs=state.concepts.map(x=>x.def).filter(d=>n(d)!==n(c.def));
+      const mcPrompts=[`Which option best defines ${c.term}?`,`Select the statement that correctly describes ${c.term}.`,`Which description of ${c.term} is most accurate?`,`For ${c.term}, which statement is correct?`];
+      return uniqueQuestion(()=>{
+        if(t==="multiple_choice"){
+          const related=similarConcepts(c,state.concepts,12).map(x=>x.def);
+          const distractors=shuffle(related.length?related:defs.filter(d=>Math.abs(d.length-c.def.length)<80)).slice(0,3);
+          let texts=shuffle([c.def,...distractors]);
+          while(texts.length<4){const extra=pick(defs);if(extra&&!texts.some(o=>n(o)===n(extra)))texts.push(extra);else break}
+          texts=texts.slice(0,4);
+          if(!texts.some(o=>n(o)===n(c.def)))texts[0]=c.def;
+          const options=texts.map(txt=>({text:txt,correct:n(txt)===n(c.def)}));
+          return {type:"multiple_choice",topic:c.term,question:pick(mcPrompts),options,explanation:`${c.term} is defined in your notes as: ${c.def}`,conceptId:c.cid,hint:c.hint};
+        }
+        const fallbackDistractors = shuffle(defs).slice(0,3);
+        const fallbackTexts = shuffle([c.def, ...fallbackDistractors]).slice(0,4);
+        const fallbackOptions = fallbackTexts.map(txt=>({text:txt,correct:n(txt)===n(c.def)}));
+        return {type:"multiple_choice",topic:c.term,question:`Which option best defines ${c.term}?`,options:fallbackOptions,explanation:`${c.term} is defined in your notes as: ${c.def}`,conceptId:c.cid,hint:c.hint};
+      });
+    }
+    function markMiss(cid,ok){
+      const st=state.stats.get(cid)||{asked:0,correct:0,incorrect:0};st.asked++;ok?st.correct++:st.incorrect++;state.stats.set(cid,st);
+      if(ok) state.missed=state.missed.filter(x=>x!==cid);
+      else {
+        if(!state.missed.includes(cid))state.missed.push(cid);
+        if(!state.retryQueue.includes(cid))state.retryQueue.push(cid);
+      }
+    }
+    function setFeedback(type,text,extra=""){feedback.className="feedback "+(type||"");feedback.innerHTML=`<div><strong>${text}</strong></div>${extra?`<div>${extra}</div>`:""}`;if(window.MathJax?.typesetPromise)MathJax.typesetPromise([feedback]).catch(()=>{})}
+    function lockOptions(){dynamicZone.querySelectorAll(".option").forEach(b=>b.classList.add("locked"))}
+    function renderQuestion(){state.current=makeQuestion();state.answered=false;nextBtn.disabled=true;dynamicZone.innerHTML="";setFeedback("","Pick an answer to continue.");qType.textContent=state.current.type.replaceAll("_"," ");qText.innerHTML=state.current.question;
+      if(["multiple_choice","concept_identification","select_all"].includes(state.current.type)){
+        const opts=document.createElement("div");opts.className="options";
+        state.current.options.forEach((op,i)=>{const btn=document.createElement("button");btn.className="option";btn.dataset.index=String(i);btn.innerHTML=`<strong>${String.fromCharCode(65+i)}.</strong> ${op.text}`;btn.addEventListener("click",()=>{if(state.current.type==="select_all"){btn.classList.toggle("selected");updateSelectAllSubmit()}else gradeChoice(i)});opts.appendChild(btn)});
+        dynamicZone.appendChild(opts);
+        if(state.current.type==="select_all"){ const row=document.createElement("div");row.className="actions";row.innerHTML=`<button class="primary" id="submitSelectAll" disabled>Submit Selection</button>`;dynamicZone.appendChild(row);$("submitSelectAll").addEventListener("click",gradeSelectAll); }
+      } else {
+        const box=document.createElement("div");box.innerHTML=`<div class="fill-row"><input id="fillInput" class="fill-input" placeholder="Type your answer..." /><button class="primary" id="fillSubmit">Submit</button></div>`;dynamicZone.appendChild(box);$("fillSubmit").addEventListener("click",gradeFill);$("fillInput").addEventListener("keydown",(e)=>{if(e.key==="Enter")gradeFill()})
+      }
+      if(window.MathJax?.typesetPromise)MathJax.typesetPromise([qText,dynamicZone]).catch(()=>{})}
+    function formatCorrectAnswer(q){const correct=q.options.map((o,i)=>({i,o})).filter(x=>x.o.correct);if(!correct.length)return"Correct Answer: N/A";if(q.type==="select_all"){return`Correct Options: ${correct.map(x=>`${String.fromCharCode(65+x.i)}. ${x.o.text}`).join(" | ")}`;}const c=correct[0];return `Correct Option: ${String.fromCharCode(65+c.i)}. ${c.o.text}`;}
+    function finalize(ok,exp){state.asked++;if(ok){state.correct++;state.streak++}else{state.incorrect++;state.streak=0}markMiss(state.current.conceptId,ok);state.recentConcepts.push(state.current.conceptId);if(state.recentConcepts.length>30)state.recentConcepts.shift();state.recentTypes.push(state.current.type);if(state.recentTypes.length>12)state.recentTypes.shift();updateChips();nextBtn.disabled=false;state.answered=true;setFeedback(ok?"ok":"bad",ok?"Correct":"Incorrect",`${formatCorrectAnswer(state.current)}<br>${exp}<br>${state.current.explanation}`)}
+    function gradeChoice(idx){if(state.answered)return;const options=[...dynamicZone.querySelectorAll(".option")];const correctIdx=Math.max(0,state.current.options.findIndex(o=>o.correct));options.forEach((btn,i)=>{if(i===correctIdx)btn.classList.add("correct");if(i===idx&&i!==correctIdx)btn.classList.add("wrong")});lockOptions();finalize(idx===correctIdx,idx===correctIdx?"Good.":"Review this concept and try again.");}
+    function updateSelectAllSubmit(){const submit=$("submitSelectAll");if(!submit)return;const anySelected=[...dynamicZone.querySelectorAll(".option.selected")].length>0;submit.disabled=!anySelected;}
+    function gradeSelectAll(){if(state.answered)return;const btns=[...dynamicZone.querySelectorAll(".option")];const selected=new Set(btns.filter(b=>b.classList.contains("selected")).map(b=>Number(b.dataset.index)));let ok=true;btns.forEach((btn,i)=>{const should=state.current.options[i].correct;btn.classList.remove("selected");if(should)btn.classList.add("correct");if(selected.has(i)&&!should)btn.classList.add("wrong");if(selected.has(i)!==should)ok=false;});lockOptions();finalize(ok,ok?"Good.":"Selection did not match all correct statements.");}
+    function gradeFill(){if(state.answered)return;const v=$("fillInput").value.trim();const ans=(state.current.options.find(o=>o.correct)||{text:""}).text;const ok=n(v)===n(ans)||overlap(v,ans)>=.85;finalize(ok,ok?"Exact recall matched.":`You answered "${v||"[blank]"}".`);$("fillInput").disabled=true;$("fillSubmit").disabled=true}
+    function startGame(concepts){
+      if(!concepts.length){alert("No concepts found.");return}
+      let mapped=concepts.map((c,i)=>({
+        cid:i,
+        term:c.term,
+        def:makeCompleteDefinition(c.term, c.def||c.definition||""),
+        formula:c.formula||null,
+        hint:`Focus on "${c.term}" and its exact note wording.`
+      })).filter(c=>c.term&&c.def);
+      const strict=mapped.filter(isConceptQualityOK);
+      const fallback=mapped.filter(c=>(String(c.def||"").length>=16&&String(c.term||"").length>=3));
+      state.concepts=(strict.length>=30?strict:fallback).slice(0,60);
+      if(!state.concepts.length){alert("No valid concepts found.");return}
+      state.stats.clear();state.missed=[];state.retryQueue=[];state.asked=0;state.correct=0;state.incorrect=0;state.streak=0;state.recentKeys=[];state.recentTypes=[];state.recentConcepts=[];refillQueue();updateChips();setupCard.style.display="none";quizCard.style.display="block";renderQuestion();
+    }
+    async function initFromLocalPool(){
+      try{
+        const res=await fetch("./study_pool.json",{cache:"no-store"});
+        if(!res.ok)throw new Error("pool not found");
+        const data=await res.json();
+        startGame(data);
+      }catch(_){
+        // Fallback to manual paste only if local pool is unavailable.
+        setupCard.style.display="block";
+      }
+    }
+    $("startBtn").addEventListener("click",()=>{const concepts=parseGuide(guideInput.value);if(!concepts.length){alert("Could not parse fallback text. Use lines like: Term: definition");return}startGame(concepts)});
+    nextBtn.addEventListener("click",renderQuestion);
+    skipBtn.addEventListener("click",()=>{if(!state.current)return;markMiss(state.current.conceptId,false);setFeedback("bad","Skipped","Concept marked for review and will reappear.");nextBtn.disabled=false;state.answered=true});
+    hintBtn.addEventListener("click",()=>{if(!state.current)return;setFeedback("","Hint",state.current.hint)});
+    document.querySelectorAll(".mode-btn").forEach(btn=>btn.addEventListener("click",()=>{document.querySelectorAll(".mode-btn").forEach(b=>b.classList.remove("active"));btn.classList.add("active");state.mode=btn.dataset.mode}));
+    updateChips();
+    initFromLocalPool();
+  </script>
+</body>
+</html>
